@@ -8,8 +8,8 @@ namespace Eng
 	class EventCallback : public ICallback
 	{
 	public:
-		typedef void (T::*CallbackT)(const DerivedEvent&); // Pointer to any member function of T
-		EventCallback(T* const instance, EventCallback::CallbackT callback)
+		typedef void (T::* CallbackT)(const DerivedEvent&); // Pointer to any member function of T
+		EventCallback(T* instance, EventCallback::CallbackT callback)
 				: callback(callback)
 		{
 			if (instance == nullptr)
@@ -33,6 +33,6 @@ namespace Eng
 
 	private:
 		CallbackT callback;
-		T* const instance;
+		T* instance;
 	};
 }

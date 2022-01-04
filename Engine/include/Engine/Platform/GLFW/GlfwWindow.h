@@ -2,6 +2,7 @@
 
 #include "Engine/Core/Window.h"
 #include "Engine/Events/Events.h"
+#include "Engine/Core/Logger.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -10,25 +11,24 @@ namespace Eng
 	class GlfwWindow : public Window
 	{
 	public:
+		GlfwWindow(EventDispatcher* dispatcher);
+		~GlfwWindow();
 		Window* CreateWindow(const std::string& windowTitle, int width, int height) override;
-
-		void DestroyWindow() override;
+		void Update() override;
+		void Close() override;
 
 		int GetWidth() const override;
-
 		int GetHeight() const override;
 
 		GLFWwindow* GetHandle() const;
-
-		void OnCreate() override;
-		void OnUpdate() override;
-
-	protected:
-		static void OnClose(GLFWwindow* handle);
 	private:
-		int mWidth = 0;
-		int mHeight = 0;
-		GLFWwindow* windowHandle;
+		WindowData windowData{};
+		GLFWwindow* windowHandle = nullptr;
+		Logger* logger = nullptr;
+		void InitGLContext();
+		void SetupCallbacks();
+
+		static void CloseCallback(GLFWwindow* windowHandle);
 	};
 }
 

@@ -3,14 +3,14 @@
 namespace Eng
 {
 	// Taken from GLFW key #defines
-	enum class [[maybe_unused]] KeyState
+	enum class KeyState
 	{
 		RELEASED = 0,
 		PRESSED = 1,
 		REPEAT = 2,
 	};
 
-	enum class [[maybe_unused]] Modifiers
+	enum class Modifiers
 	{
 		NONE = 0x0000,
 		SHIFT = 0x0001,
@@ -21,7 +21,7 @@ namespace Eng
 		NUM_LOCK = 0x0020
 	};
 
-	enum class [[maybe_unused]] MouseButton
+	enum class MouseButton
 	{
 		LEFT = 0,
 		RIGHT = 1,
@@ -31,7 +31,7 @@ namespace Eng
 		LAST = 5
 	};
 
-	enum class [[maybe_unused]] Keys
+	enum class Keys
 	{
 		/* The unknown key */
 		UNKNOWN = -1,

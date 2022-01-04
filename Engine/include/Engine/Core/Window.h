@@ -14,33 +14,33 @@ namespace Eng
 	class Window
 	{
 	public:
+		Window(EventDispatcher* dispatcher);
+		virtual ~Window() = default;
 		virtual Window* CreateWindow(const std::string& windowTitle, int width, int height) = 0;
+		virtual void Update() = 0;
+		virtual void Close() = 0;
 
-		virtual void DestroyWindow() = 0;
-
-		virtual void OnCreate() = 0;
-
-		virtual void OnUpdate() = 0;
-
-		[[nodiscard]] virtual int GetWidth() const = 0;
-
-		[[nodiscard]] virtual int GetHeight() const = 0;
-
-		void DispatchEvent(const EventBase& event) const;
-
+		virtual int GetWidth() const = 0;
+		virtual int GetHeight() const = 0;
 	protected:
+		EventDispatcher* dispatcher;
+	private:
+		WindowData windowData;
+	};
+}
+
+/*
+		void DispatchEvent(const EventBase& event) const {
+			dispatcher->dispatch(event);
+		}
+
 		template<typename T, typename DerivedEvent>
-		void AddListener(void(T::*callbackT)(const DerivedEvent&)) {
+		void AddListener(void(T::* callbackT)(const DerivedEvent&)) {
 			dispatcher->template add_listener(this, callbackT);
 		}
 
 		template<typename T, typename DerivedEvent>
-		void RemoveListener(void(T::*callbackT)(const DerivedEvent&)) {
+		void RemoveListener(void(T::* callbackT)(const DerivedEvent&)) {
 			dispatcher->template remove_listener(this, callbackT);
 		}
-
-	private:
-		std::unique_ptr<EventDispatcher> dispatcher;
-		WindowData windowData;
-	};
-}
+*/
