@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Engine/Events/EventDispatcher.h"
 #include "Engine/Events/Events.h"
+#include "Engine/Core/Input.h"
 
 namespace Eng
 {

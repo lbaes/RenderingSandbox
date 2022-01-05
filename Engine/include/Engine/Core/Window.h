@@ -3,6 +3,7 @@
 #include <string>
 #include <Engine/Events/EventBase.h>
 #include "Engine/Events/EventDispatcher.h"
+#include "Engine/Core/Input.h"
 
 namespace Eng
 {
@@ -24,6 +25,7 @@ namespace Eng
 		virtual int GetHeight() const = 0;
 	protected:
 		EventDispatcher* dispatcher;
+		std::unique_ptr<Input> input;
 	private:
 		WindowData windowData;
 	};

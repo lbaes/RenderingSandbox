@@ -1,7 +1,7 @@
 #include "Engine/Core/Application.h"
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include <stdexcept>
+#include <chrono>
+#include <thread>
 
 #ifdef ENG_WINDOWS
 #include "Engine/Platform/GLFW/GlfwWindow.h"

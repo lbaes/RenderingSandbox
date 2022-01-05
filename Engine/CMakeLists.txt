@@ -4,11 +4,7 @@ add_subdirectory(external)
 
 # compile engine
 add_library(Engine SHARED
-        # SRC
-        "src/Application.cpp"
-        "src/Window.cpp"
-
-        # CORE
+        # Core
         "include/Engine/Engine.h"
         "include/Engine/Core/Application.h"
         "include/Engine/Core/Core.h"
@@ -29,7 +25,14 @@ add_library(Engine SHARED
         # Platform
         "include/Engine/Platform/GLFW/GlfwWindow.h" 
         "include/Engine/Platform/GLFW/GlfwWindow.cpp" 
-        "include/Engine/Platform/GLFW/Input.cpp")
+        "include/Engine/Platform/GLFW/GlfwInput.h"
+        "include/Engine/Platform/GLFW/GlfwInput.cpp"
+
+        # Source
+        "src/Application.cpp"
+        "src/Window.cpp"
+        "src/Input.cpp"
+)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

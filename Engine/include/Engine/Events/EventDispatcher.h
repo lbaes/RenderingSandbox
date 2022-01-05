@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <spdlog/spdlog.h>
 #include "EventCallback.h"
+#include "Engine/Core/Logger.h"
 
 namespace Eng
 {
@@ -13,6 +14,10 @@ namespace Eng
 	class EventDispatcher
 	{
 	public:
+		EventDispatcher() {
+			logger = Logger::GetLogger();
+		}
+
 		template<typename T, typename DerivedEvent>
 		void add_listener(T* instance, void(T::* callbackT)(const DerivedEvent&))
 		{
@@ -38,15 +43,21 @@ namespace Eng
 
 		void dispatch(const EventBase& event) const
 		{
-			const auto& callbacks = callback_list.at(typeid(event));
-			for (auto const cb : callbacks)
-			{
-				cb->run(event);
+			try {
+				const auto& callbacks = callback_list.at(typeid(event));
+				for (auto const cb : callbacks)
+				{
+					cb->run(event);
+				}
+			}
+			catch (const std::out_of_range& ex) {
+				logger->LogWarning("no callbacks registered for: {}", typeid(event).name());
 			}
 		}
 
 	private:
 		std::unordered_map<std::type_index, std::vector<ICallback*>> callback_list{};
+		Logger* logger;
 	};
 
 }
