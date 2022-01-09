@@ -15,8 +15,12 @@ namespace Eng
 		GlfwWindow(EventDispatcher* dispatcher);
 		~GlfwWindow();
 		Window* CreateWindow(const std::string& windowTitle, int width, int height) override;
+		
+		void Start() override;
 		void Update() override;
-		void Close() override;
+		void Shutdown() override;
+
+		void CloseWindow() override;
 
 		int GetWidth() const override;
 		int GetHeight() const override;

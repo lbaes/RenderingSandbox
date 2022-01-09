@@ -19,7 +19,7 @@ namespace Eng
 			this->instance = instance;
 		}
 
-		void run_aux(const EventBase& eventBase) const override
+		void run_aux(EventBase& eventBase) const override
 		{
 			if (instance == nullptr)
 				throw std::runtime_error("cannot execute callback with a null instance");

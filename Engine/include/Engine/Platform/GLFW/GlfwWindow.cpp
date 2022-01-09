@@ -40,15 +40,26 @@ namespace Eng
 		return this;
 	}
 
-	void GlfwWindow::Update()
+	void GlfwWindow::Start()
 	{
-		glfwPollEvents();
+
 	}
 
-	void GlfwWindow::Close()
+	void GlfwWindow::Update()
+	{
+		glfwSwapBuffers(windowHandle);
+	}
+
+	void GlfwWindow::Shutdown()
+	{
+		CloseWindow();
+		glfwTerminate();
+	}
+
+	void GlfwWindow::CloseWindow()
 	{
 		glfwSetWindowShouldClose(windowHandle, true);
-		const QuitEvent e;
+		QuitEvent e;
 		dispatcher->dispatch(e);
 	}
 
@@ -71,7 +82,7 @@ namespace Eng
 	void GlfwWindow::CloseCallback(GLFWwindow* windowHandle)
 	{
 		auto window = static_cast<GlfwWindow*>(glfwGetWindowUserPointer(windowHandle));
-		window->Close();
+		window->CloseWindow();
 	}
 
 	int GlfwWindow::GetWidth() const

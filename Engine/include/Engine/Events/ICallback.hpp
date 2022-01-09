@@ -9,12 +9,12 @@ namespace Eng
 	public:
 		virtual ~ICallback() = default;
 
-		void run(const EventBase& event) const
+		void run(EventBase& event) const
 		{
 			run_aux(event);
 		}
 
 	private:
-		virtual void run_aux(const EventBase& event) const = 0;
+		virtual void run_aux(EventBase& event) const = 0;
 	};
 }

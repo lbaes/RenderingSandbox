@@ -6,6 +6,7 @@ add_subdirectory(external)
 add_library(Engine SHARED
         # Core
         "include/Engine/Engine.h"
+        "include/Engine/Core/Module.h"
         "include/Engine/Core/Application.h"
         "include/Engine/Core/Core.h"
         "include/Engine/Core/Startup.h"
@@ -32,7 +33,7 @@ add_library(Engine SHARED
         "src/Application.cpp"
         "src/Window.cpp"
         "src/Input.cpp"
-)
+ )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

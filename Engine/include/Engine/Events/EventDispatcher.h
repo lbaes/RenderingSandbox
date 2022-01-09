@@ -41,13 +41,15 @@ namespace Eng
 			}
 		}
 
-		void dispatch(const EventBase& event) const
+		void dispatch(EventBase& event) const
 		{
 			try {
 				const auto& callbacks = callback_list.at(typeid(event));
 				for (auto const cb : callbacks)
 				{
-					cb->run(event);
+					if (!event.isHandled)
+						cb->run(event);
+					else return;
 				}
 			}
 			catch (const std::out_of_range& ex) {

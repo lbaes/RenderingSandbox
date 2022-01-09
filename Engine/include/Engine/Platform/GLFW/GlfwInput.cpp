@@ -16,6 +16,12 @@ namespace Eng {
 		glfwSetScrollCallback(handle, &GlfwInput::scroll_callback);
 	}
 
+	void GlfwInput::Update()
+	{
+		// Triggers all registered callbacks;
+		glfwPollEvents();
+	}
+
 	void GlfwInput::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
 		input_ptr->UpdateMousePosition(xpos, ypos);
