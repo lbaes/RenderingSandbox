@@ -3,7 +3,15 @@
 
 namespace Eng {
 
-	Window::Window(EventDispatcher* dispatcher) : windowData{}, dispatcher{dispatcher}
+	Window::Window() : windowData{}
 	{
+	}
+
+	void Window::SetWindowShouldClose() {
+		isOpen = false;
+	}
+
+	bool Window::IsOpen() {
+		return isOpen;
 	}
 }

@@ -3,11 +3,14 @@
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Keys.h"
 #include "Engine/Core/Logger.h"
+#include <array>
 
 namespace Eng {
+	class Window;
 	class Input {
 	public:
-		Input(EventDispatcher* dispatcher);
+		Input();
+		virtual void Update(){};
 		bool IsKeyDown(Keys key);
 		bool IsKeyUp(Keys key);
 		bool IsMousePressed(MouseButton btn);
@@ -18,11 +21,10 @@ namespace Eng {
 		void UpdateMousePosition(double xPos, double yPos);
 		void UpdateMouseScroll(double xPos, double yPos);
 	private:
-		std::unordered_map<Keys, KeyState> key_pressed;
-		std::unordered_map<MouseButton, KeyState> mouse_button_pressed;
+		std::array<KeyState, static_cast<int> (Keys::LAST)> key_pressed{KeyState::RELEASED};
+		std::array<KeyState, static_cast<int> (MouseButton::LAST)> mouse_button_pressed{ KeyState::RELEASED };
 		double mouseX{}, mouseY{};
 		double scrollX{}, scrollY{};
-		EventDispatcher* dispatcher = nullptr;
 		Logger* logger = nullptr;
 	};
 }

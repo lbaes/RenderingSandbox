@@ -7,9 +7,9 @@
 namespace Eng
 {
 
-	GlfwWindow::GlfwWindow(EventDispatcher* dispatcher) : Window(dispatcher)
+	GlfwWindow::GlfwWindow() : Window()
 	{
-		logger = Logger::GetLogger();
+		logger = Eng::Logger::GetLogger();
 		auto handle = GetHandle();
 	}
 
@@ -34,15 +34,9 @@ namespace Eng
 			throw std::runtime_error("GLFW failed to create window");
 		}
 		InitGLContext();
-		input = std::make_unique<GlfwInput>(dispatcher, this);
 		SetupCallbacks();
 		logger->LogInfo("GLFW window created with valid OpenGl context");
 		return this;
-	}
-
-	void GlfwWindow::Start()
-	{
-
 	}
 
 	void GlfwWindow::Update()
@@ -50,17 +44,11 @@ namespace Eng
 		glfwSwapBuffers(windowHandle);
 	}
 
-	void GlfwWindow::Shutdown()
-	{
-		CloseWindow();
-		glfwTerminate();
-	}
-
 	void GlfwWindow::CloseWindow()
 	{
+		SetWindowShouldClose();
 		glfwSetWindowShouldClose(windowHandle, true);
-		QuitEvent e;
-		dispatcher->dispatch(e);
+		glfwTerminate();
 	}
 
 	void GlfwWindow::InitGLContext()
@@ -83,6 +71,11 @@ namespace Eng
 	{
 		auto window = static_cast<GlfwWindow*>(glfwGetWindowUserPointer(windowHandle));
 		window->CloseWindow();
+	}
+
+	void GlfwWindow::SetTitle(const std::string& title) const
+	{
+		glfwSetWindowTitle(windowHandle, title.c_str());
 	}
 
 	int GlfwWindow::GetWidth() const

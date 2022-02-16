@@ -7,12 +7,14 @@
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "Engine/Utility/Singleton.h"
 
 namespace Eng
 {
-	class Logger
+	class Logger : Singleton<Logger>
 	{
 	private:
+		friend class Singleton<Logger>;
 		Logger()
 		{
 			try
@@ -39,10 +41,10 @@ namespace Eng
 		}
 
 	public:
+
 		static Logger* GetLogger() {
-			static Logger logger;
-			return &logger;
-		};
+			return Singleton<Logger>::Create();
+		}
 
 		template<typename... Args>
 		void LogTrace(const std::string& message, Args&& ...args) const

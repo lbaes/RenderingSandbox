@@ -15,7 +15,7 @@ namespace Eng
 	{
 	public:
 		EventDispatcher() {
-			logger = Logger::GetLogger();
+			logger = Eng::Logger::GetLogger();
 		}
 
 		template<typename T, typename DerivedEvent>

@@ -6,8 +6,8 @@
 namespace Eng {
 	class GlfwInput : public Input {
 	public:
-		GlfwInput(EventDispatcher* dispatcher, GlfwWindow* window);
-		void Update();
+		GlfwInput(const GlfwWindow& window);
+		virtual void Update() override;
 	private:
 		static GlfwInput* input_ptr;
 		static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);

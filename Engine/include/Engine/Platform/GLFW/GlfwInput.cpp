@@ -5,11 +5,11 @@ namespace Eng {
 
 	GlfwInput* GlfwInput::input_ptr = nullptr;
 
-	GlfwInput::GlfwInput(EventDispatcher* dispatcher, GlfwWindow* window)
-		: Input(dispatcher)
+	GlfwInput::GlfwInput(const GlfwWindow& window)
+		: Input()
 	{
 		GlfwInput::input_ptr = this;
-		auto handle = window->GetHandle();
+		auto handle = window.GetHandle();
 		glfwSetKeyCallback(handle, &GlfwInput::key_callback);
 		glfwSetCursorPosCallback(handle, &GlfwInput::cursor_position_callback);
 		glfwSetMouseButtonCallback(handle, &GlfwInput::mouse_button_callback);

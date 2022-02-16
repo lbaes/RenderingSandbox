@@ -12,6 +12,7 @@ namespace Eng
 
 	EG_API Application* GetApplication();
 	Window* GetWindow();
+	Input* GetInput();
 
 	class EG_API Application
 	{
@@ -26,11 +27,11 @@ namespace Eng
 	private:
 		friend EG_API Application* GetApplication();
 		friend Window* GetWindow();
-		static EventDispatcher* dispatcher;
-		Window* window;
-		bool isRunning;
+		friend Input* GetInput();
 
-		void OnQuitEvent(const QuitEvent& event);
+		Window* window;
+		Input* input;
+		bool isRunning;
 
 	};
 }

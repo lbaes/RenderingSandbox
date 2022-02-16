@@ -1,7 +1,21 @@
 #pragma once
 
 #include "Engine/Core/Application.h"
+#include "Engine/Utility/Singleton.h"
 #include "Engine/Core/Logger.h"
+namespace Eng {
+	class Startup : Singleton<Startup>{
+	public :
+		Startup(){}
+		~Startup(){}
+	private:
+		// Singletons
+		Application* Application = nullptr;
+		Logger* EngineLogger = nullptr;
+
+		
+	};
+}
 
 #ifdef ENG_WINDOWS
 

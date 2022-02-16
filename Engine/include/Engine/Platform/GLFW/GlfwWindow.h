@@ -12,18 +12,17 @@ namespace Eng
 	class GlfwWindow : public Window
 	{
 	public:
-		GlfwWindow(EventDispatcher* dispatcher);
+		GlfwWindow();
 		~GlfwWindow();
 		Window* CreateWindow(const std::string& windowTitle, int width, int height) override;
 		
-		void Start() override;
 		void Update() override;
-		void Shutdown() override;
-
 		void CloseWindow() override;
 
 		int GetWidth() const override;
 		int GetHeight() const override;
+
+		virtual void SetTitle(const std::string& title) const override;
 
 		GLFWwindow* GetHandle() const;
 	private:
@@ -34,6 +33,8 @@ namespace Eng
 		void SetupCallbacks();
 
 		static void CloseCallback(GLFWwindow* windowHandle);
+
+
 	};
 }
 

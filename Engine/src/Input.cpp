@@ -1,16 +1,16 @@
 #include "Engine/Core/Input.h"
+#include "Engine/Core/Window.h"
 
 namespace Eng {
 
-	Input::Input(EventDispatcher* dispatcher) : dispatcher{ dispatcher }
+	Input::Input()
 	{
-		assert(dispatcher != nullptr);
 		logger = Logger::GetLogger();
 	}
 
 	bool Input::IsKeyDown(Keys key)
 	{
-		return key_pressed.at(key) == KeyState::PRESSED;
+		return key_pressed[KeyToCode(key)] == KeyState::PRESSED;
 	}
 
 	bool Input::IsKeyUp(Keys key)
@@ -20,7 +20,7 @@ namespace Eng {
 
 	bool Input::IsMousePressed(MouseButton btn)
 	{
-		return mouse_button_pressed.at(btn) == KeyState::PRESSED;
+		return mouse_button_pressed[KeyToCode(btn)] == KeyState::PRESSED;
 	}
 
 	bool Input::IsMouseReleased(MouseButton btn)
@@ -29,13 +29,12 @@ namespace Eng {
 	}
 
 	void Input::UpdateKeyState(Keys key, KeyState state) {
-		key_pressed[key] = state;
+		key_pressed[KeyToCode(key)] = state;
 		KeyEvent e{};
 		e.isHandled = false;
 		e.key = key;
 		e.mods = Modifiers::NONE;
 		e.state = state;
-		dispatcher->dispatch(e);
 		if (state == KeyState::PRESSED) {
 			logger->LogTrace("Key press");
 		}
@@ -49,13 +48,12 @@ namespace Eng {
 	}
 
 	void Input::UpdateMouseButtonState(MouseButton btn, KeyState state) {
-		mouse_button_pressed[btn] = state;
+		mouse_button_pressed[KeyToCode(btn)] = state;
 		MouseButtonEvent e;
 		e.isHandled = false;
 		e.button = btn;
 		e.state = state;
 		e.mods = Modifiers::NONE;
-		dispatcher->dispatch(e);
 	}
 
 	void Input::UpdateMousePosition(double xPos, double yPos)
@@ -66,7 +64,6 @@ namespace Eng {
 		e.isHandled = false;
 		e.x_pos = xPos;
 		e.y_pos = yPos;
-		dispatcher->dispatch(e);
 	}
 
 	void Input::UpdateMouseScroll(double xPos, double yPos)
@@ -77,7 +74,6 @@ namespace Eng {
 		e.isHandled = false;
 		e.x_offset = xPos;
 		e.y_offset = yPos;
-		dispatcher->dispatch(e);
 	}
 
 }

@@ -2,8 +2,6 @@
 
 #include <string>
 #include <Engine/Events/EventBase.h>
-#include "Engine/Events/EventDispatcher.h"
-#include "Engine/Core/Input.h"
 
 namespace Eng
 {
@@ -15,23 +13,19 @@ namespace Eng
 	class Window
 	{
 	public:
-		Window(EventDispatcher* dispatcher);
+		Window();
 		virtual ~Window() = default;
 		virtual Window* CreateWindow(const std::string& windowTitle, int width, int height) = 0;
-		
-		// Implement Module
-		virtual void Start();
-		virtual void Update();
-		virtual void Shutdown();
-
-		// Window Methods
+		virtual void Update(){};
 		virtual void CloseWindow() = 0;
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
+		virtual void SetTitle(const std::string& title) const = 0;
+		bool IsOpen();
 	protected:
-		EventDispatcher* dispatcher;
-		std::unique_ptr<Input> input;
+		void SetWindowShouldClose();
 	private:
 		WindowData windowData;
+		bool isOpen = true;
 	};
 }
