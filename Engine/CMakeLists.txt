@@ -10,6 +10,24 @@ add_library(Engine SHARED
         "src/Input.cpp"
         "src/EngineConfig.cpp"
 
+        # Platform
+        "include/Engine/Platform/GLFW/GlfwWindow.h" 
+        "include/Engine/Platform/GLFW/GlfwWindow.cpp" 
+        "include/Engine/Platform/GLFW/GlfwInput.h"
+        "include/Engine/Platform/GLFW/GlfwInput.cpp"
+        "include/Engine/Platform/Timer.h"
+        "include/Engine/Platform/Timer.cpp" 
+
+        # Types
+        "include/Engine/Core/Types/Vec2.h" 
+        "include/Engine/Core/Types/Vec3.h" 
+        "include/Engine/Core/Types/Vec4.h" 
+        "include/Engine/Core/Types/Mat2.h" 
+        "include/Engine/Core/Types/Mat3.h" 
+        "include/Engine/Core/Types/Mat4.h" 
+        "include/Engine/Core/Types/Mat.h" 
+        "include/Engine/Core/Types/Vec.h"
+
         # Core
         "include/Engine/Engine.h"
         "include/Engine/Core/Application.h"
@@ -30,16 +48,26 @@ add_library(Engine SHARED
         "include/Engine/Events/ICallback.hpp"
         "include/Engine/Events/Events.h"
 
-        # Platform
-        "include/Engine/Platform/GLFW/GlfwWindow.h" 
-        "include/Engine/Platform/GLFW/GlfwWindow.cpp" 
-        "include/Engine/Platform/GLFW/GlfwInput.h"
-        "include/Engine/Platform/GLFW/GlfwInput.cpp"
-        "include/Engine/Platform/Timer.h"
-        "include/Engine/Platform/Timer.cpp" 
+        # Resources
+        "include/Engine/Resources/ResourceManager.h"
+        "include/Engine/Resources/ResourceCache.h"
+        "include/Engine/Resources/ManagedResources.h"
+        "include/Engine/Resources/ImageLoader.h"
+        "include/Engine/Resources/ImageLoader.cpp" 
+        "include/Engine/Resources/Image.h"
+        "include/Engine/Resources/Texture2D.h" 
+        "include/Engine/Resources/Texture2D.cpp"
+        "include/Engine/Resources/Material.h" 
+        "include/Engine/Resources/Font.h"
+
+        # LL Renderer
+        "include/Engine/LLRenderer/Vertex.h"
+        "include/Engine/LLRenderer/Buffers.h"
 
         # Utility
-        "include/Engine/Utility/Singleton.h")
+        "include/Engine/Utility/Singleton.h"  
+        "include/Engine/Core/Types/Color.h"
+        "include/Engine/Utility/FlagEnum.h"  "include/Engine/LLRenderer/RenderDevice.h")
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")
