@@ -63,11 +63,13 @@ add_library(Engine SHARED
         # LL Renderer
         "include/Engine/LLRenderer/Vertex.h"
         "include/Engine/LLRenderer/Buffers.h"
+        "include/Engine/LLRenderer/RenderDevice.h"
+        "include/Engine/LLRenderer/RenderDevice.cpp"
 
         # Utility
         "include/Engine/Utility/Singleton.h"  
         "include/Engine/Core/Types/Color.h"
-        "include/Engine/Utility/FlagEnum.h"  "include/Engine/LLRenderer/RenderDevice.h")
+        "include/Engine/Utility/FlagEnum.h"  )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

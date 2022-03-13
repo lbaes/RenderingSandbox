@@ -4,6 +4,7 @@
 #include <string>
 
 namespace Eng {
+
 	class Texture2D {
 	public:
 		Texture2D() = default;

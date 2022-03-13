@@ -64,7 +64,6 @@ namespace Eng
 	{
 		glfwSetWindowUserPointer(windowHandle, this);
 		glfwSetWindowCloseCallback(windowHandle, &GlfwWindow::CloseCallback);
-
 	}
 
 	void GlfwWindow::CloseCallback(GLFWwindow* windowHandle)

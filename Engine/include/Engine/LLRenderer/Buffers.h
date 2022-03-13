@@ -1,5 +1,7 @@
 #pragma once
-#include <LLRenderer/Vertex.h>
+#include <Engine/LLRenderer/Vertex.h>
+#include <Engine/Core/Types/Vec.h>
+#include <Engine/Core/Types/Color.h>
 #include <vector>
 
 namespace Eng {
@@ -28,12 +30,21 @@ namespace Eng {
 			return buffer_usage;
 		}
 
-		Vertex* GetData() const{
+		const Vertex* GetData() const{
 			return vertex_buffer.data();
 		}
+
+		size_t GetSize() const {
+			return vertex_buffer.size();
+		}
+
+		size_t GetSizeBytes() const {
+			return vertex_buffer.size() * sizeof(Vertex);
+		}
+
 	private:
 		std::vector<Vertex> vertex_buffer;
-		VERTEX_BUFFER_USAGE buffer_usage = VERTEX_BUFFER_USAGE::USAGE_STATIC;
+		VERTEX_BUFFER_USAGE buffer_usage = VERTEX_BUFFER_USAGE::STATIC;
 	};
 
 	class IndexBuffer {
@@ -43,8 +54,8 @@ namespace Eng {
 			indices.emplace_back(index);
 		}
 
-		unsigned int* GetData() const{
-			return indices.GetData();
+		const unsigned int* GetData() const{
+			return indices.data();
 		}
 
 	private:

@@ -1,5 +1,6 @@
 #pragma once
-#include <Core/Types/Vec.h>
+#include <Engine/Core/Types/Vec.h>
+
 namespace Eng {
 
 	class Color3 {
@@ -10,13 +11,13 @@ namespace Eng {
 			rgb_values[2] = b;
 		}
 		constexpr unsigned int red() const {
-			return rgba_values.x;
+			return rgb_values.x;
 		}
 		constexpr unsigned int green() const {
-			return rgba_values.y;
+			return rgb_values.y;
 		};
 		constexpr unsigned int blue() const {
-			return rgba_values.z;
+			return rgb_values.z;
 		};
 	private:
 		Vec3ui rgb_values{};
@@ -25,10 +26,10 @@ namespace Eng {
 	class Color4 {
 	public:
 		Color4(unsigned int r = 0, unsigned int g = 0, unsigned int b = 0, unsigned int a = 1) {
-			rgb_values[0] = r;
-			rgb_values[1] = g;
-			rgb_values[2] = b;
-			rgb_values[3] = a;
+			rgba_values[0] = r;
+			rgba_values[1] = g;
+			rgba_values[2] = b;
+			rgba_values[3] = a;
 		}
 
 		constexpr unsigned int red() const {

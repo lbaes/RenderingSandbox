@@ -29,7 +29,9 @@ namespace Eng {
 	}
 
 	void Input::UpdateKeyState(Keys key, KeyState state) {
-		key_pressed[KeyToCode(key)] = state;
+		auto key_code = KeyToCode(key);
+		if (key_code == -1) return;
+		key_pressed[key_code] = state;
 		KeyEvent e{};
 		e.isHandled = false;
 		e.key = key;
