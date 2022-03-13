@@ -27,6 +27,7 @@ add_library(Engine SHARED
         "include/Engine/Core/Types/Mat4.h" 
         "include/Engine/Core/Types/Mat.h" 
         "include/Engine/Core/Types/Vec.h"
+        "include/Engine/Core/Types/Color.h"
 
         # Core
         "include/Engine/Engine.h"
@@ -59,6 +60,8 @@ add_library(Engine SHARED
         "include/Engine/Resources/Texture2D.cpp"
         "include/Engine/Resources/Material.h" 
         "include/Engine/Resources/Font.h"
+        "include/Engine/Resources/Shader.h"
+        "include/Engine/Resources/Shader.cpp"
 
         # LL Renderer
         "include/Engine/LLRenderer/Vertex.h"
@@ -68,8 +71,12 @@ add_library(Engine SHARED
 
         # Utility
         "include/Engine/Utility/Singleton.h"  
-        "include/Engine/Core/Types/Color.h"
-        "include/Engine/Utility/FlagEnum.h"  )
+        "include/Engine/Utility/FlagEnum.h"    
+        "include/Engine/Utility/ReadFile.h"    
+        "include/Engine/Utility/ReadFile.cpp"        
+        "include/Engine/Utility/TypeString.h"        
+
+)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

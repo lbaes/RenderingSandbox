@@ -35,7 +35,7 @@ namespace Eng {
 		return 0;
 	}
 
-	int RenderDevice::CreateVertexBuffer(const VertexBuffer& vertexBuffer) const
+	int RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
 	{
 		unsigned int vbo_id, vao_id, ebo_id;
 		glGenBuffers(1, &vbo_id);
@@ -45,12 +45,22 @@ namespace Eng {
 		// Bind VAO
 		glBindVertexArray(vao_id);
 
-		// Copy data
+		// Copy vertex data to VBO
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer.GetSizeBytes(), vertexBuffer.GetData(), GetGLUsage(vertexBuffer.GetUsage()));
 
+		// Copy index data to EBO
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.GetSizeBytes(), indexBuffer.GetData(), GL_STATIC_DRAW);
 
-		return 0;
+		// Unbind VAO
+		glBindVertexArray(0);
+
+		// Unbind buffers
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		return vao_id;
 	}
 
 	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage) {
