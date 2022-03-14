@@ -1,6 +1,7 @@
 #include "RenderDevice.h"
 #include "Engine/Resources/Texture2D.h"
 #include "Engine/LLRenderer/Buffers.h"
+#include "Engine/Core/Types/HashedString.h"
 #include "glad/glad.h"
 
 
@@ -13,6 +14,11 @@ namespace Eng {
 		initialized = true;
 	}
 
+	/// <summary>
+	/// Creates a 2D Texture resource on the GPU
+	/// </summary>
+	/// <param name="tex"></param>
+	/// <returns>ID used to refer to the texture</returns>
 	int RenderDevice::CreateTexture2D(const Texture2D& tex) const
 	{
 		unsigned int texture_id;
@@ -32,7 +38,7 @@ namespace Eng {
 		// Mipmapping
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		return 0;
+		return texture_id;
 	}
 
 	int RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
@@ -59,6 +65,9 @@ namespace Eng {
 		// Unbind buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		using namespace Eng::literal;
+		auto hstring = "test"_hash;
 
 		return vao_id;
 	}

@@ -16,6 +16,7 @@ namespace Eng
 		window = GetWindow();
 		window->CreateWindow("Application", 800, 400);
 		input = GetInput();
+		resourceManager = std::make_unique<ResourceManager>();
 	};
 
 	Application* Application::app = nullptr;

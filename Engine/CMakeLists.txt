@@ -28,6 +28,7 @@ add_library(Engine SHARED
         "include/Engine/Core/Types/Mat.h" 
         "include/Engine/Core/Types/Vec.h"
         "include/Engine/Core/Types/Color.h"
+        "include/Engine/Core/Types/HashedString.h"
 
         # Core
         "include/Engine/Engine.h"
@@ -64,6 +65,7 @@ add_library(Engine SHARED
         "include/Engine/Resources/Shader.cpp"
 
         # LL Renderer
+        "include/Engine/LLRenderer/ResourceHandle.h"
         "include/Engine/LLRenderer/Vertex.h"
         "include/Engine/LLRenderer/Buffers.h"
         "include/Engine/LLRenderer/RenderDevice.h"
@@ -74,9 +76,9 @@ add_library(Engine SHARED
         "include/Engine/Utility/FlagEnum.h"    
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
-        "include/Engine/Utility/TypeString.h"        
+        "include/Engine/Utility/TypeString.h" 
 
-)
+  )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")
@@ -87,4 +89,4 @@ endif ()
 if (UNIX)
     target_compile_definitions(Engine PUBLIC "ENG_LINUX")
 endif()
-target_link_libraries(Engine PUBLIC stb glad glfw glm imgui assimp spdlog)
+target_link_libraries(Engine PUBLIC stb glad glfw glm imgui assimp spdlog murmurhash)

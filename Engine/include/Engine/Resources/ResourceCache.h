@@ -6,7 +6,7 @@ namespace Eng {
 	template <class Resource>
 	class ResourceCache {
 	public:
-		const Resource& Fetch(const std::string& path) const {
+		const Resource& Fetch(const std::string& path) {
 			if (!loaded_resources.contains(path)) {
 				Reload(path);
 			};

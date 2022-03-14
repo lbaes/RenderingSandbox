@@ -1,10 +1,12 @@
 #pragma once
 
+#include <memory>
 #include "Core.h"
 #include "Window.h"
 #include "Engine/Events/EventDispatcher.h"
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Input.h"
+#include "Engine/Resources/ResourceManager.h"
 
 namespace Eng
 {
@@ -31,6 +33,7 @@ namespace Eng
 
 		Window* window;
 		Input* input;
+		std::unique_ptr<ResourceManager> resourceManager;
 		bool isRunning;
 
 	};

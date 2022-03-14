@@ -98,6 +98,6 @@ add_subdirectory(spdlog)
 add_library(stb INTERFACE)
 target_include_directories(stb INTERFACE ./stb/)
 
-# TOML CPP
-# add_library(tomlcpp STATIC ./tomlcpp/toml.h ./tomlcpp/toml.c ./tomlcpp/tomlcpp.hpp ./tomlcpp/tomlcpp.cpp)
-# target_include_directories(tomlcpp PUBLIC ./tomlcpp/)
+# Murmur Hash
+add_library(murmurhash STATIC murmurhash/MurmurHash3.h murmurhash/MurmurHash3.cpp )
+target_include_directories(murmurhash PUBLIC ./murmurhash/)
