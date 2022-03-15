@@ -17,6 +17,7 @@ namespace Eng
 		window->CreateWindow("Application", 800, 400);
 		input = GetInput();
 		resourceManager = std::make_unique<ResourceManager>();
+		renderDevice = std::make_unique<RenderDevice>();
 	};
 
 	Application* Application::app = nullptr;
@@ -30,7 +31,11 @@ namespace Eng
 		Ticks frametime = 0.1;
 		std::stringstream timeText;
 		isRunning = true;
-		
+
+		auto handle = resourceManager->LoadTexture("resources/bricks.jpeg");
+		renderDevice->InitRenderDevice();
+		renderDevice->CreateTexture2D(*handle.resource);
+
 		while (isRunning)
 		{
 			timer.Start();

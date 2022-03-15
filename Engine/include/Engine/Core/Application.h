@@ -7,6 +7,7 @@
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Input.h"
 #include "Engine/Resources/ResourceManager.h"
+#include "Engine/LLRenderer/RenderDevice.h"
 
 namespace Eng
 {
@@ -34,6 +35,7 @@ namespace Eng
 		Window* window;
 		Input* input;
 		std::unique_ptr<ResourceManager> resourceManager;
+		std::unique_ptr<RenderDevice> renderDevice;
 		bool isRunning;
 
 	};

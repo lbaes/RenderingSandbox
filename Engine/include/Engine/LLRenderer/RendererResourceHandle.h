@@ -1,7 +1,8 @@
 #pragma once
 
 namespace Eng {
-	struct ResourceHandle {
+	template <class T>
+	struct RendererResourceHandle {
 		unsigned int ID;
 	};
 }

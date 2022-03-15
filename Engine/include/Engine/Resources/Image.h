@@ -5,6 +5,6 @@ namespace Eng {
 		int width;
 		int height;
 		int num_channels_in_file;
-		unsigned char* data;
+		unsigned char* data = nullptr;
 	};
 }

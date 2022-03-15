@@ -6,5 +6,9 @@ add_custom_target(COPY_ENGINE_DLL
   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:Demo> $<TARGET_FILE_DIR:Demo>
   COMMAND_EXPAND_LISTS
   )
+add_custom_target(COPY_RESOURCES
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/ $<TARGET_FILE_DIR:Demo>/resources
+  COMMAND_EXPAND_LISTS
+  )
 add_dependencies(COPY_ENGINE_DLL Engine)
-add_dependencies(Demo COPY_ENGINE_DLL)
+add_dependencies(Demo COPY_ENGINE_DLL COPY_RESOURCES)

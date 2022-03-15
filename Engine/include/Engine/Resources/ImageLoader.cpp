@@ -30,10 +30,15 @@ Eng::Image Eng::ImageLoader::Load(const std::string& filePath, Components compon
 		img.data = nullptr;
 		break;
 	}
-	if (img.data == NULL) {
+	if (img.data == nullptr) {
 		std::stringstream error_msg;
 		error_msg << "Failed to load requested image: " << filePath << "Reason: "<< stbi_failure_reason() << "\n";
 		throw ImageLoaderException(error_msg.str());
 	}
 	return img;
+}
+
+void Eng::ImageLoader::Unload(const Image& image) noexcept
+{
+	stbi_image_free(image.data);
 }

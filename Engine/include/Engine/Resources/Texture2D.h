@@ -7,12 +7,15 @@ namespace Eng {
 
 	class Texture2D {
 	public:
+		Texture2D() = default;
+		~Texture2D();
+		Texture2D(const Texture2D& other);
+		Texture2D(Texture2D&& other) noexcept;
 		int GetWidth() const;
 		int GetHeight() const;
 		unsigned char* GetData() const;
-		static Texture2D LoadFromDisk(const std::string& path);
+		static Texture2D* LoadFromDisk(const std::string& path);
 	private:
-		Texture2D() = default;
 		Image img;
 	};
 }

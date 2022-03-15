@@ -13,6 +13,7 @@ namespace Eng {
 			RGBA = 4,
 		};
 		static Image Load(const std::string& filePath, Components components);
+		static void Unload(const Image& image) noexcept;
 	};
 
 	class ImageLoaderException : public std::runtime_error{

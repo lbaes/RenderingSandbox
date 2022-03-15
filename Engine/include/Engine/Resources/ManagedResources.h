@@ -4,3 +4,4 @@
 #include "Image.h"
 #include "Model.h"
 #include "Material.h"
+#include "Shader.h"

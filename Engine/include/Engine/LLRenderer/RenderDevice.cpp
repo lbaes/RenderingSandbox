@@ -1,7 +1,7 @@
 #include "RenderDevice.h"
 #include "Engine/Resources/Texture2D.h"
 #include "Engine/LLRenderer/Buffers.h"
-#include "Engine/Core/Types/HashedString.h"
+#include "ErrorLogger.h"
 #include "glad/glad.h"
 
 
@@ -11,6 +11,11 @@ namespace Eng {
 
 	void RenderDevice::InitRenderDevice()
 	{
+#ifdef ENGINE_DEBUG
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(ErrorLogger::gl_error_logger, NULL);
+#endif // ENGINE_DEBUG
 		initialized = true;
 	}
 
@@ -65,9 +70,6 @@ namespace Eng {
 		// Unbind buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		using namespace Eng::literal;
-		auto hstring = "test"_hash;
 
 		return vao_id;
 	}
