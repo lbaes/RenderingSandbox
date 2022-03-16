@@ -64,13 +64,16 @@ add_library(Engine SHARED
         "include/Engine/Resources/Font.h"
         "include/Engine/Resources/Shader.h"
         "include/Engine/Resources/Shader.cpp"
+        "include/Engine/Resources/Mesh.h"
 
         # LL Renderer
-        "include/Engine/LLRenderer/RendererResourceHandle.h"
+        
         "include/Engine/LLRenderer/Vertex.h"
         "include/Engine/LLRenderer/Buffers.h"
         "include/Engine/LLRenderer/RenderDevice.h"
         "include/Engine/LLRenderer/RenderDevice.cpp"
+        "include/Engine/LLRenderer/ErrorLogger.h" 
+        "include/Engine/LLRenderer/Handles.h"
 
         # Utility
         "include/Engine/Utility/Singleton.h"  
@@ -78,7 +81,7 @@ add_library(Engine SHARED
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h" 
- "include/Engine/LLRenderer/ErrorLogger.h")
+   )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

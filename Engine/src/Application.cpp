@@ -10,7 +10,7 @@
 
 namespace Eng
 {
-	Application::Application() : window{ nullptr }, input{nullptr}, isRunning{ false }
+	Application::Application() : window{ nullptr }, input{ nullptr }, isRunning{ false }
 	{
 		app = this;
 		window = GetWindow();
@@ -27,26 +27,28 @@ namespace Eng
 
 	int Application::Start()
 	{
+		renderDevice->InitRenderDevice();
+		
 		Timer timer;
 		Ticks frametime = 0.1;
 		std::stringstream timeText;
 		isRunning = true;
 
+		OnStart();
+
+		// Load stuff
 		auto handle = resourceManager->LoadTexture("resources/bricks.jpeg");
-		renderDevice->InitRenderDevice();
-		renderDevice->CreateTexture2D(*handle.resource);
+		auto brick_id = renderDevice->CreateTexture2D(*handle.resource, Texture2DUsage::DIFFUSE);
 
 		while (isRunning)
 		{
 			timer.Start();
 			timeText.str("");
-			timeText << "fTime: " << frametime << " | FPS: " << 1/(frametime/1000);
+			timeText << "fTime: " << frametime << " | FPS: " << 1 / (frametime / 1000);
 			window->SetTitle(timeText.str());
 			isRunning = window->IsOpen();
 			input->Update();
-			if (input->IsKeyDown(Keys::ESCAPE)) {
-				isRunning = false;
-			}
+			OnUpdate();
 			window->Update();
 			frametime = timer.GetTime();
 			timer.Stop();

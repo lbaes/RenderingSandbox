@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine/LLRenderer/Vertex.h>
+#include <Engine/LLRenderer/Handles.h>
 #include <Engine/Core/Types/Vec.h>
 #include <Engine/Core/Types/Color.h>
 #include <vector>
@@ -59,5 +60,12 @@ namespace Eng {
 			buffer.emplace_back(index);
 		}
 
+	};
+
+	class TextureBuffer : public Buffer<Texture2DHandle> {
+	public:
+		void AddTexture(const Texture2DHandle& tex) {
+			buffer.push_back(tex);
+		}
 	};
 }

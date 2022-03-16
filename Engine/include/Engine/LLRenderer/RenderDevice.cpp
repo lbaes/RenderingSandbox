@@ -1,13 +1,16 @@
 #include "RenderDevice.h"
-#include "Engine/Resources/Texture2D.h"
 #include "Engine/LLRenderer/Buffers.h"
+#include "Engine/Resources/Texture2D.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Shader.h"
 #include "ErrorLogger.h"
 #include "glad/glad.h"
-
 
 namespace Eng {
 
 	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage);
+	int CheckCompileErrors(unsigned int shader, const std::string& shaderType);
+	int CheckLinkerErrors(unsigned int shader);
 
 	void RenderDevice::InitRenderDevice()
 	{
@@ -24,7 +27,7 @@ namespace Eng {
 	/// </summary>
 	/// <param name="tex"></param>
 	/// <returns>ID used to refer to the texture</returns>
-	int RenderDevice::CreateTexture2D(const Texture2D& tex) const
+	Texture2DHandle RenderDevice::CreateTexture2D(const Texture2D& tex, Texture2DUsage usage) const
 	{
 		unsigned int texture_id;
 		glGenTextures(1, &texture_id);
@@ -43,11 +46,15 @@ namespace Eng {
 		// Mipmapping
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		return texture_id;
+		Texture2DHandle t;
+		t.ID = texture_id;
+		t.usage = usage;
+		return t;
 	}
 
-	int RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
+	BufferHandle RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
 	{
+		// Create Buffers
 		unsigned int vbo_id, vao_id, ebo_id;
 		glGenBuffers(1, &vbo_id);
 		glGenBuffers(1, &ebo_id);
@@ -71,7 +78,74 @@ namespace Eng {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		return vao_id;
+		BufferHandle bh;
+		bh.VAO = vao_id;
+		bh.VBO = vbo_id;
+		bh.EBO = ebo_id;
+		return bh;
+	}
+
+	ShaderHandle RenderDevice::CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const
+	{
+		unsigned int vShaderID, fShaderID, programID;
+		const auto fShaderCode = fragmentShader.GetShaderSource().c_str();
+		const auto vShaderCode = vertexShader.GetShaderSource().c_str();
+
+		// Vertex Shader
+		vShaderID = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vShaderID, 1, &vShaderCode, NULL);
+		glCompileShader(vShaderID);
+		CheckCompileErrors(vShaderID, "VERTEX");
+
+		// Fragment Shader
+		fShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fShaderID, 1, &fShaderCode, NULL);
+		glCompileShader(fShaderID);
+		CheckCompileErrors(fShaderID, "FRAGMENT");
+
+		// Shader Program
+		programID = glCreateProgram();
+		glAttachShader(programID, vShaderID);
+		glAttachShader(programID, fShaderID);
+		glLinkProgram(programID);
+		CheckLinkerErrors(programID);
+
+		// Delete shaders
+		glDeleteShader(vShaderID);
+		glDeleteShader(fShaderID);
+
+		ShaderHandle sh;
+		sh.ID = programID;
+
+		return sh;
+	}
+
+	MeshHandle RenderDevice::CreateMesh(const Mesh& mesh) const
+	{
+		// Create Buffers
+		BufferHandle bh = CreateBuffers(mesh.vertices, mesh.indices);
+
+		// vertex positions
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+		
+		// vertex normals
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, vertex_normal));
+		
+		// vertex texture coordinates
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texture_coordinate));
+
+		// unbind
+		glBindVertexArray(0);
+
+		// This is weird
+		MeshHandle m;
+		m.VAO = bh.VAO;
+		m.VBO = bh.VBO;
+		m.EBO = bh.EBO;
+		return m;
 	}
 
 	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage) {
@@ -87,5 +161,37 @@ namespace Eng {
 			return GL_STATIC_DRAW;
 			break;
 		}
+	}
+
+	// TODO: MOVE TO SHADER COMPILER CLASS
+	int CheckCompileErrors(unsigned int shader, const std::string& shaderType) {
+		int compilationSuccess;
+		char infoLog[512];
+
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &compilationSuccess);
+		if (!compilationSuccess)
+		{
+			glGetShaderInfoLog(shader, 512, NULL, infoLog);
+			std::cout << "ERROR::SHADER::" << shaderType << "::COMPILATION_FAILED\n" << infoLog << std::endl;
+
+		}
+
+		return compilationSuccess;
+	}
+
+	// TODO: MOVE TO SHADER COMPILER CLASS
+	int CheckLinkerErrors(unsigned int shader) {
+		int linkSuccess;
+		char infoLog[512];
+
+		glGetProgramiv(shader, GL_LINK_STATUS, &linkSuccess);
+		if (!linkSuccess)
+		{
+			glGetProgramInfoLog(shader, 512, NULL, infoLog);
+			std::cout << "ERROR::SHADER::" << "PROGRAM" << "::LINKING_FAILED\n" << infoLog << std::endl;
+
+		}
+
+		return linkSuccess;
 	}
 }

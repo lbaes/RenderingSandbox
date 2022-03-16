@@ -8,6 +8,7 @@
 #include "Engine/Core/Input.h"
 #include "Engine/Resources/ResourceManager.h"
 #include "Engine/LLRenderer/RenderDevice.h"
+#include "Engine/LLRenderer/Buffers.h"
 
 namespace Eng
 {
@@ -26,6 +27,9 @@ namespace Eng
 
 	protected:
 		static Application* app;
+		static Logger* logger;
+		virtual void OnStart(){};
+		virtual void OnUpdate(){};
 
 	private:
 		friend EG_API Application* GetApplication();
@@ -37,6 +41,5 @@ namespace Eng
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<RenderDevice> renderDevice;
 		bool isRunning;
-
 	};
 }
