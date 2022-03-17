@@ -6,6 +6,7 @@
 #include "Engine/Events/EventDispatcher.h"
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Input.h"
+#include "Engine/Core/Logger.h"
 #include "Engine/Resources/ResourceManager.h"
 #include "Engine/LLRenderer/RenderDevice.h"
 #include "Engine/LLRenderer/Buffers.h"
@@ -27,7 +28,6 @@ namespace Eng
 
 	protected:
 		static Application* app;
-		static Logger* logger;
 		virtual void OnStart(){};
 		virtual void OnUpdate(){};
 
@@ -38,6 +38,7 @@ namespace Eng
 
 		Window* window;
 		Input* input;
+		Logger* logger;
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<RenderDevice> renderDevice;
 		bool isRunning;

@@ -14,6 +14,7 @@ namespace Eng {
 		shader.shader_type = GetShaderTypeFromFileName(path);
 		return shader;
 	}
+
 	const std::string& Shader::GetShaderSource() const
 	{
 		if ("" == shader_source)

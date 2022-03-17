@@ -19,5 +19,6 @@ namespace Eng {
 	private:
 		ResourceCache<Texture2D> texture_cache;
 		ResourceCache<Shader> shader_cache;
+		ResourceCache<Model> model_cache;
 	};
 }

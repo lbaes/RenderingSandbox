@@ -62,9 +62,9 @@ namespace Eng {
 
 	};
 
-	class TextureBuffer : public Buffer<Texture2DHandle> {
+	class TextureBuffer : public Buffer<Texture2D> {
 	public:
-		void AddTexture(const Texture2DHandle& tex) {
+		void AddTexture(const Texture2D& tex) {
 			buffer.push_back(tex);
 		}
 	};

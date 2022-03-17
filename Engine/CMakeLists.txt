@@ -19,6 +19,7 @@ add_library(Engine SHARED
         "include/Engine/Platform/Timer.cpp" 
 
         # Types
+        "include/Engine/Core/Types/HashedString.h"
         "include/Engine/Core/Types/Vec2.h" 
         "include/Engine/Core/Types/Vec3.h" 
         "include/Engine/Core/Types/Vec4.h" 
@@ -28,7 +29,6 @@ add_library(Engine SHARED
         "include/Engine/Core/Types/Mat.h" 
         "include/Engine/Core/Types/Vec.h"
         "include/Engine/Core/Types/Color.h"
-        "include/Engine/Core/Types/HashedString.h"
 
         # Core
         "include/Engine/Engine.h"
@@ -55,8 +55,6 @@ add_library(Engine SHARED
         "include/Engine/Resources/ResourceCache.h"
         "include/Engine/Resources/ResourceHandle.h"
         "include/Engine/Resources/ManagedResources.h"
-        "include/Engine/Resources/ImageLoader.h"
-        "include/Engine/Resources/ImageLoader.cpp" 
         "include/Engine/Resources/Image.h"
         "include/Engine/Resources/Texture2D.h" 
         "include/Engine/Resources/Texture2D.cpp"
@@ -65,9 +63,13 @@ add_library(Engine SHARED
         "include/Engine/Resources/Shader.h"
         "include/Engine/Resources/Shader.cpp"
         "include/Engine/Resources/Mesh.h"
+        "include/Engine/Resources/Model.h"
+        "include/Engine/Resources/Model.cpp"
+        "include/Engine/Resources/ModelLoader.h" 
+        "include/Engine/Resources/ImageLoader.h"
+        "include/Engine/Resources/ImageLoader.cpp" 
 
         # LL Renderer
-        
         "include/Engine/LLRenderer/Vertex.h"
         "include/Engine/LLRenderer/Buffers.h"
         "include/Engine/LLRenderer/RenderDevice.h"
@@ -81,7 +83,7 @@ add_library(Engine SHARED
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h" 
-   )
+ "include/Engine/Resources/ModelLoader.cpp")
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

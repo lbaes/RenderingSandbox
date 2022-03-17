@@ -19,6 +19,7 @@ namespace Eng {
 		img = other.img;
 		other.img.data = nullptr;
 	}
+
 	int Texture2D::GetWidth() const
 	{
 		return img.width;

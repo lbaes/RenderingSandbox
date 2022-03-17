@@ -28,30 +28,31 @@ namespace Eng
 	int Application::Start()
 	{
 		renderDevice->InitRenderDevice();
-		
-		Timer timer;
-		Ticks frametime = 0.1;
-		std::stringstream timeText;
 		isRunning = true;
-
 		OnStart();
 
 		// Load stuff
 		auto handle = resourceManager->LoadTexture("resources/bricks.jpeg");
 		auto brick_id = renderDevice->CreateTexture2D(*handle.resource, Texture2DUsage::DIFFUSE);
-
-		while (isRunning)
+		const double ms_per_update = 50.0;
+		Timer simulation_timer;
+		simulation_timer.Start();
+		double previous = simulation_timer.GetTime();
+		double lag = 0.0;
+		while (window->IsOpen())
 		{
-			timer.Start();
-			timeText.str("");
-			timeText << "fTime: " << frametime << " | FPS: " << 1 / (frametime / 1000);
-			window->SetTitle(timeText.str());
-			isRunning = window->IsOpen();
+			double current = simulation_timer.GetTime();
+			double elapsed = current - previous;
+			previous = current;
+			lag += elapsed;
 			input->Update();
-			OnUpdate();
-			window->Update();
-			frametime = timer.GetTime();
-			timer.Stop();
+			while (lag >= ms_per_update) {
+				OnUpdate();
+				window->Update();
+				lag -= ms_per_update;
+			}
+			// Render sttuf
+
 		}
 		return 0;
 	}
