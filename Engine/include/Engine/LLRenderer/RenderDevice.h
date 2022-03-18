@@ -8,6 +8,7 @@ namespace Eng {
 	class Texture2D;
 	class Shader;
 	class Mesh;
+	class Model;
 	class RenderDevice {
 	public:
 	public:
@@ -16,6 +17,7 @@ namespace Eng {
 		Texture2DHandle CreateTexture2D(const Texture2D& tex, Texture2DUsage usage) const;
 		ShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const;
 		MeshHandle CreateMesh(const Mesh& mesh) const;
+		ModelHandle CreateModel(const Model& model) const;
 	private:
 		bool initialized = false;
 	};

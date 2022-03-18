@@ -17,8 +17,15 @@
         "strategy": "external"
       },
       "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": {
+          "type": "BOOL",
+          "value": "ON"
+        },
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+      },
+      "environment": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -29,18 +36,27 @@
       }
     },
     {
-      "name": "Windows x64 Debug VS",
-      "displayName": "Windows x64 Debug VS",
+      "name": "Windows x64 Debug Clang",
+      "displayName": "Windows x64 Debug Clang",
       "description": "Target Windows with the Visual Studio development environment.",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "architecture": {
         "value": "x64",
         "strategy": "external"
       },
       "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": {
+          "type": "BOOL",
+          "value": "ON"
+        },
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_CXX_COMPILER": "clang",
+        "CMAKE_C_COMPILER": "clang"
+      },
+      "environment": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -54,7 +70,11 @@
   "buildPresets": [
     {
       "name": "Debug",
-      "configurePreset": "Windows x64 Debug"      
+      "configurePreset": "Windows x64 Debug"
+    },
+    {
+      "name": "Debug Clang",
+      "configurePreset": "Windows x64 Debug Clang"
     }
   ]
 }

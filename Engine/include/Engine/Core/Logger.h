@@ -47,31 +47,31 @@ namespace Eng
 		}
 
 		template<typename... Args>
-		void LogTrace(const std::string& message, Args&& ...args) const
+		void LogTrace(fmt::format_string<Args...> message, Args&& ...args) const
 		{
 			engine_log->info(message, std::forward<Args>(args)...);
 		}
 
 		template<typename... Args>
-		void LogInfo(const std::string& message, Args&& ...args) const
+		void LogInfo(fmt::format_string<Args...> message, Args&& ...args) const
 		{
 			engine_log->info(message, std::forward<Args>(args)...);
 		}
 
 		template<typename... Args>
-		void LogWarning(const std::string& message, Args&& ...args) const
+		void LogWarning(fmt::format_string<Args...> message, Args&& ...args) const
 		{
 			engine_log->warn(message, std::forward<Args>(args)...);
 		}
 
 		template<typename... Args>
-		void LogError(const std::string& message, Args&& ...args) const
+		void LogError(fmt::format_string<Args...> message, Args&& ...args) const
 		{
 			engine_log->error(message, std::forward<Args>(args)...);
 		}
 
 		template<typename... Args>
-		void LogFatal(const std::string& message, Args&& ...args) const
+		void LogFatal(fmt::format_string<Args...> message, Args&& ...args) const
 		{
 			engine_log->critical(message, std::forward<Args>(args)...);
 		}

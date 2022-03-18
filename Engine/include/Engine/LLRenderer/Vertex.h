@@ -4,6 +4,13 @@
 
 namespace Eng {
 	struct Vertex {
+		Vertex() = default;
+		Vertex(Vec3 pos, Color4 diffuse, Color4 specular, Vec3 normal, Vec2 tex_coord) :
+			position{ pos }, 
+			diffuse_color{ diffuse }, 
+			specular_color{ specular }, 
+			vertex_normal{ normal }, 
+			texture_coordinate{ tex_coord }{};
 		Vec3 position;
 		Color4 diffuse_color;
 		Color4 specular_color;

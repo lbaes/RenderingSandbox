@@ -1,19 +1,20 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "ModelLoader.h"
 #include <iostream>
+#include "ModelLoader.h"
+#include "Engine/Core/Types/HashedString.h"
 
 namespace Eng {
 
-    void processNode(aiNode* node, const aiScene* scene, Model& model, ResourceCache<Texture2DHandle>* tex_cache);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene, ResourceCache<Texture2DHandle>* tex_cache);
-    
-    ModelLoader::ModelLoader(ResourceCache<Texture2D>* tex_cache) : texture_cache{tex_cache}
+    void ProcessNode(aiNode* node, const aiScene* scene, Model& model);
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+    ModelLoader::ModelLoader()
     {
     }
 
-    ResourceHandle<Model> ModelLoader::LoadModel(const std::string& path) const
+    Model* ModelLoader::LoadModel(const std::string& path) const
 	{
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -21,37 +22,35 @@ namespace Eng {
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-            return;
+            throw std::runtime_error("RESOURCE LOAD ERROR");
         }
         //directory = path.substr(0, path.find_last_of('/'));
 
 	    Model* model = new Model();
-        ResourceHandle<Model> model_handle;
-        model_handle.resource = std::move(std::shared_ptr<Model>(model));
-        processNode(scene->mRootNode, scene, *model, texture_cache);
-		return ;
+        ProcessNode(scene->mRootNode, scene, *model);
+		return model;
 	}
 
-    void processNode(aiNode* node, const aiScene* scene, Model& model, ResourceCache<Texture2D>* tex_cache)
+    void ProcessNode(aiNode* node, const aiScene* scene, Model& model)
     {
         // process all the node's meshes (if any)
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            model.AddMesh(processMesh(mesh, scene, tex_cache));
+            model.AddMesh(ProcessMesh(mesh, scene));
         }
         // then do the same for each of its children
         for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
-            processNode(node->mChildren[i], scene, model, tex_cache);
+            ProcessNode(node->mChildren[i], scene, model);
         }
     }
 
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene, ResourceCache<Texture2D>* tex_cache)
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     {
         VertexBuffer vertices;
         IndexBuffer indices;
-        TextureBuffer textures;
+        TextureHashes textures;
         // Normals
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
@@ -99,9 +98,8 @@ namespace Eng {
             {
                 aiString str;
                 mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-                // TODO Rethink this -> weird and wasteful >:(
-                auto texture = tex_cache->Fetch(str.C_Str());
-                textures.AddTexture(*texture.resource);
+                const char* filename = str.C_Str();
+                textures.AddTexture(hash_string(str.C_Str()));
             }
         }
 

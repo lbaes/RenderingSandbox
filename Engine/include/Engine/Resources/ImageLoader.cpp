@@ -32,7 +32,7 @@ Eng::Image Eng::ImageLoader::Load(const std::string& filePath, Components compon
 	}
 	if (img.data == nullptr) {
 		std::stringstream error_msg;
-		error_msg << "Failed to load requested image: " << filePath << "Reason: "<< stbi_failure_reason() << "\n";
+		error_msg << "Failed to load requested image: \"" << filePath << "\". Reason: "<< stbi_failure_reason() << "\n";
 		throw ImageLoaderException(error_msg.str());
 	}
 	return img;

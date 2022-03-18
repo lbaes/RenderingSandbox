@@ -4,7 +4,10 @@
 #include <cstdlib>
 
 namespace Eng {
-	Texture2D::Texture2D(const Texture2D& other)
+
+	Texture2D::Texture2D() : usage{ Texture2DUsage::DIFFUSE } {}
+
+	Texture2D::Texture2D(const Texture2D& other) : usage{ other.usage }
 	{
 		const size_t img_data_size = 4ll * other.img.height * other.img.width;
 		img = other.img;
@@ -14,7 +17,7 @@ namespace Eng {
 		}
 	}
 
-	Texture2D::Texture2D(Texture2D&& other) noexcept
+	Texture2D::Texture2D(Texture2D&& other) noexcept : usage{ other.usage }
 	{
 		img = other.img;
 		other.img.data = nullptr;

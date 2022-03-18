@@ -21,12 +21,19 @@ namespace Eng {
 
 int main()
 {
+	int status = 0;
 	Eng::Logger* engine_logger = Eng::Logger::GetLogger();
 	Eng::Application* app = Eng::GetApplication();
 	if (app)
 	{
 		engine_logger->LogInfo("Starting Application");
-		return app->Start();
+		try {
+			return app->Start();
+		}
+		catch (const std::exception& ex) {
+			engine_logger->LogError("unhandled exception:\n{}", ex.what());
+			status = -1;
+		}
 	}
 	engine_logger->LogError("Could not start application");
 	return -1;

@@ -31,8 +31,8 @@ namespace Eng
 		isRunning = true;
 		OnStart();
 
-		// Load stuff
-		auto handle = resourceManager->LoadTexture("resources/bricks.jpeg");
+		// load stuff
+		auto handle = resourceManager->LoadTexture("resources/monkey/bricks.jpeg");
 		auto brick_id = renderDevice->CreateTexture2D(*handle.resource, Texture2DUsage::DIFFUSE);
 		const double ms_per_update = 50.0;
 		Timer simulation_timer;

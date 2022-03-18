@@ -173,7 +173,6 @@ namespace Eng {
 		{
 			glGetShaderInfoLog(shader, 512, NULL, infoLog);
 			std::cout << "ERROR::SHADER::" << shaderType << "::COMPILATION_FAILED\n" << infoLog << std::endl;
-
 		}
 
 		return compilationSuccess;
@@ -188,8 +187,7 @@ namespace Eng {
 		if (!linkSuccess)
 		{
 			glGetProgramInfoLog(shader, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::" << "PROGRAM" << "::LINKING_FAILED\n" << infoLog << std::endl;
-
+			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 		}
 
 		return linkSuccess;

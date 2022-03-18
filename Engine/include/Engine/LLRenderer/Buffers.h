@@ -3,6 +3,8 @@
 #include <Engine/LLRenderer/Handles.h>
 #include <Engine/Core/Types/Vec.h>
 #include <Engine/Core/Types/Color.h>
+#include <Engine/Core/Types/HashedString.h>
+#include <Engine/Resources/Texture2D.h>
 #include <vector>
 
 namespace Eng {
@@ -48,24 +50,28 @@ namespace Eng {
 		VERTEX_BUFFER_USAGE GetUsage() const {
 			return buffer_usage;
 		}
-
 	private:
 		VERTEX_BUFFER_USAGE buffer_usage = VERTEX_BUFFER_USAGE::STATIC;
 	};
 
 	class IndexBuffer : public Buffer<unsigned int> {
 	public:
-
 		void AddIndex(unsigned int index) {
 			buffer.emplace_back(index);
 		}
-
 	};
 
-	class TextureBuffer : public Buffer<Texture2D> {
+	class TextureBuffer : public Buffer<Texture2DHandle> {
 	public:
-		void AddTexture(const Texture2D& tex) {
+		void AddTexture(const Texture2DHandle& tex) {
 			buffer.push_back(tex);
+		}
+	};
+
+	class TextureHashes : public Buffer<HashedString> {
+	public:
+		void AddTexture(HashedString hs) {
+			buffer.emplace_back(hs);
 		}
 	};
 }

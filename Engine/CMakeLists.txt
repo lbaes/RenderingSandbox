@@ -1,5 +1,4 @@
-﻿
-# compile external dependencies
+﻿# compile external dependencies
 add_subdirectory(external)
 
 # compile engine
@@ -51,9 +50,9 @@ add_library(Engine SHARED
         "include/Engine/Events/Events.h"
 
         # Resources
-        "include/Engine/Resources/ResourceManager.h"
-        "include/Engine/Resources/ResourceCache.h"
-        "include/Engine/Resources/ResourceHandle.h"
+        
+        
+        
         "include/Engine/Resources/ManagedResources.h"
         "include/Engine/Resources/Image.h"
         "include/Engine/Resources/Texture2D.h" 
@@ -68,7 +67,8 @@ add_library(Engine SHARED
         "include/Engine/Resources/ModelLoader.h" 
         "include/Engine/Resources/ImageLoader.h"
         "include/Engine/Resources/ImageLoader.cpp" 
-
+        "include/Engine/Resources/ModelLoader.cpp"
+        
         # LL Renderer
         "include/Engine/LLRenderer/Vertex.h"
         "include/Engine/LLRenderer/Buffers.h"
@@ -83,7 +83,7 @@ add_library(Engine SHARED
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h" 
- "include/Engine/Resources/ModelLoader.cpp")
+ )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")
