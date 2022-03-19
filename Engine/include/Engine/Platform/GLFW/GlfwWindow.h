@@ -1,10 +1,8 @@
 #pragma once
-
 #include "Engine/Core/Window.h"
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Logger.h"
 #include "glad/glad.h"
-#pragma once
 #include "GLFW/glfw3.h"
 
 namespace Eng

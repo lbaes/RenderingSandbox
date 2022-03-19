@@ -6,9 +6,9 @@ namespace Eng {
 	public:
 		VertexBuffer vertices;
 		IndexBuffer indices;
-		TextureHashes textures;
+		TextureBuffer textures;
 
-		Mesh(const VertexBuffer& v, const IndexBuffer& i, const TextureHashes& tb)
+		Mesh(const VertexBuffer& v, const IndexBuffer& i, const TextureBuffer& tb)
 		 : vertices(v), indices(i), textures(tb){}
 	};
 }

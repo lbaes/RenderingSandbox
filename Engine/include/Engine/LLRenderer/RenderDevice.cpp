@@ -2,7 +2,9 @@
 #include "Engine/LLRenderer/Buffers.h"
 #include "Engine/Resources/Texture2D.h"
 #include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Model.h"
 #include "Engine/Resources/Shader.h"
+#include "Engine/Resources/ResourceCache.h"
 #include "ErrorLogger.h"
 #include "glad/glad.h"
 
@@ -27,7 +29,7 @@ namespace Eng {
 	/// </summary>
 	/// <param name="tex"></param>
 	/// <returns>ID used to refer to the texture</returns>
-	Texture2DHandle RenderDevice::CreateTexture2D(const Texture2D& tex, Texture2DUsage usage) const
+	Texture2DGPUHandle RenderDevice::CreateTexture2D(const Texture2D& tex) const
 	{
 		unsigned int texture_id;
 		glGenTextures(1, &texture_id);
@@ -46,13 +48,12 @@ namespace Eng {
 		// Mipmapping
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		Texture2DHandle t;
+		Texture2DGPUHandle t;
 		t.ID = texture_id;
-		t.usage = usage;
 		return t;
 	}
 
-	BufferHandle RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
+	BufferGPUHandle RenderDevice::CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
 	{
 		// Create Buffers
 		unsigned int vbo_id, vao_id, ebo_id;
@@ -78,14 +79,14 @@ namespace Eng {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		BufferHandle bh;
+		BufferGPUHandle bh;
 		bh.VAO = vao_id;
 		bh.VBO = vbo_id;
 		bh.EBO = ebo_id;
 		return bh;
 	}
 
-	ShaderHandle RenderDevice::CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const
+	ShaderGPUHandle RenderDevice::CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const
 	{
 		unsigned int vShaderID, fShaderID, programID;
 		const auto fShaderCode = fragmentShader.GetShaderSource().c_str();
@@ -114,16 +115,16 @@ namespace Eng {
 		glDeleteShader(vShaderID);
 		glDeleteShader(fShaderID);
 
-		ShaderHandle sh;
+		ShaderGPUHandle sh;
 		sh.ID = programID;
 
 		return sh;
 	}
 
-	MeshHandle RenderDevice::CreateMesh(const Mesh& mesh) const
+	MeshGPUHandle RenderDevice::CreateMesh(const Mesh& mesh) const
 	{
 		// Create Buffers
-		BufferHandle bh = CreateBuffers(mesh.vertices, mesh.indices);
+		BufferGPUHandle bh = CreateBuffers(mesh.vertices, mesh.indices);
 
 		// vertex positions
 		glEnableVertexAttribArray(0);
@@ -139,12 +140,33 @@ namespace Eng {
 
 		// unbind
 		glBindVertexArray(0);
-
-		// This is weird
-		MeshHandle m;
+		MeshGPUHandle m;
 		m.VAO = bh.VAO;
 		m.VBO = bh.VBO;
 		m.EBO = bh.EBO;
+
+		// Loads textures into GPU
+		ResourceCache<Texture2D> cache;
+		for (const auto& texture : mesh.textures) {
+			auto loaded_tex = cache.Fetch(texture.file_path);
+			Texture2DGPUHandle thandle = CreateTexture2D(*loaded_tex);
+			m.textures.push_back(thandle);
+
+		}
+
+		return m;
+	}
+
+	ModelGPUHandle RenderDevice::CreateModel(const Model& model) const {
+		unsigned int VAO = 0;
+		for (const auto& mesh : model.GetMeshes()) {
+			auto mesh_handle = CreateMesh(mesh);
+
+		}
+
+
+		ModelGPUHandle m;
+		m.VAO = VAO;
 		return m;
 	}
 

@@ -49,6 +49,7 @@ namespace Eng {
 		try {
 			t = new Texture2D();
 			t->img = ImageLoader::Load(path, ImageLoader::Components::RGBA);
+			t->file_path = path;
 			return t;
 		}
 		catch (const std::exception& e) {

@@ -24,5 +24,11 @@ namespace Eng {
 		static Texture2D* LoadFromDisk(const std::string& path);
 	private:
 		Image img;
+		std::string file_path;
+	};
+
+	struct Texture2DHandle {
+		Texture2DUsage usage = Texture2DUsage::DIFFUSE;
+		std::string file_path{};
 	};
 }

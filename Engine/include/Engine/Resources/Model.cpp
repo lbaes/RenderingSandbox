@@ -10,6 +10,11 @@ namespace Eng {
 		meshes.push_back(mesh);
 	}
 
+	const std::vector<Mesh> Model::GetMeshes() const
+	{
+		return meshes;
+	}
+
 	Model Model::LoadFromDisk(const std::string& path) {
 		return Model{};
 	}

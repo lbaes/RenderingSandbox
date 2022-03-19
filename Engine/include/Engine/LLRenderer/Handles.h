@@ -1,33 +1,37 @@
 #pragma once
+#include <cstdint>
+#include <vector>
 
 namespace Eng {
 
-	struct Texture2DHandle 
+	struct Texture2DGPUHandle 
+	{
+		unsigned int ID = 0;
+		//uint32_t file_key = 0;
+	};
+
+	struct ShaderGPUHandle
 	{
 		unsigned int ID = 0;
 	};
 
-	struct ShaderHandle
+	struct MeshGPUHandle
 	{
-		unsigned int ID = 0;
+		unsigned int VAO = 0;
+		unsigned int VBO = 0;
+		unsigned int EBO = 0;
+		std::vector<Texture2DGPUHandle> textures;
 	};
 
-	struct MeshHandle
+	struct BufferGPUHandle
 	{
 		unsigned int VAO = 0;
 		unsigned int VBO = 0;
 		unsigned int EBO = 0;
 	};
 
-	struct BufferHandle
+	struct ModelGPUHandle
 	{
-		unsigned int VAO = 0;
-		unsigned int VBO = 0;
-		unsigned int EBO = 0;
-	};
-
-	struct ModelHandle
-	{
-		unsigned int VAO = 0;
+		std::vector<Mesh> meshes;
 	};
 }

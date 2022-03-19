@@ -13,11 +13,11 @@ namespace Eng {
 	public:
 	public:
 		void InitRenderDevice();
-		BufferHandle CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const;
-		Texture2DHandle CreateTexture2D(const Texture2D& tex, Texture2DUsage usage) const;
-		ShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const;
-		MeshHandle CreateMesh(const Mesh& mesh) const;
-		ModelHandle CreateModel(const Model& model) const;
+		BufferGPUHandle CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const;
+		Texture2DGPUHandle CreateTexture2D(const Texture2D& tex) const;
+		ShaderGPUHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const;
+		MeshGPUHandle CreateMesh(const Mesh& mesh) const;
+		ModelGPUHandle CreateModel(const Model& model) const;
 	private:
 		bool initialized = false;
 	};

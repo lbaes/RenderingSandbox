@@ -2,7 +2,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <iostream>
+#include <unordered_map>
 #include "ModelLoader.h"
+#include "Engine/Resources/Texture2D.h"
 #include "Engine/Core/Types/HashedString.h"
 
 namespace Eng {
@@ -48,9 +50,10 @@ namespace Eng {
 
     Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     {
-        VertexBuffer vertices;
-        IndexBuffer indices;
-        TextureHashes textures;
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+        std::vector<Texture2DHandle> textures;
+
         // Normals
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
@@ -79,7 +82,7 @@ namespace Eng {
                 vertex.texture_coordinate = Vec2{ 0.0, 0.0 };
             }
             
-            vertices.AddVertex(vertex);
+            vertices.push_back(vertex);
         }
         
         // indices
@@ -87,7 +90,7 @@ namespace Eng {
         {
             aiFace face = mesh->mFaces[i];
             for (unsigned int j = 0; j < face.mNumIndices; j++)
-                indices.AddIndex(face.mIndices[j]);
+                indices.push_back(face.mIndices[j]);
         }
 
         // process material
@@ -99,7 +102,10 @@ namespace Eng {
                 aiString str;
                 mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
                 const char* filename = str.C_Str();
-                textures.AddTexture(hash_string(str.C_Str()));
+                auto file_key = hash_string(filename);
+                Texture2DHandle tex_handle;
+                tex_handle.usage = Texture2DUsage::DIFFUSE;
+                textures.push_back(tex_handle);
             }
         }
 

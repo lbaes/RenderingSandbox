@@ -1,5 +1,4 @@
 #include "Engine/Platform/GLFW/GlfwInput.h"
-#include "Engine/Core/Application.h"
 
 namespace Eng {
 
