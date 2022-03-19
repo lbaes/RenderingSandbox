@@ -28,6 +28,7 @@ add_library(Engine SHARED
         "include/Engine/Core/Types/Mat.h" 
         "include/Engine/Core/Types/Vec.h"
         "include/Engine/Core/Types/Color.h"
+        "include/Engine/Core/Types/Vertex.h"
 
         # Core
         "include/Engine/Engine.h"
@@ -50,38 +51,32 @@ add_library(Engine SHARED
         "include/Engine/Events/Events.h"
 
         # Resources
-        "include/Engine/Resources/ResourceCache.h"
-        "include/Engine/Resources/ManagedResources.h"
-        "include/Engine/Resources/Image.h"
         "include/Engine/Resources/Texture2D.h" 
         "include/Engine/Resources/Texture2D.cpp"
-        "include/Engine/Resources/Material.h" 
-        "include/Engine/Resources/Font.h"
         "include/Engine/Resources/Shader.h"
         "include/Engine/Resources/Shader.cpp"
         "include/Engine/Resources/Mesh.h"
         "include/Engine/Resources/Model.h"
         "include/Engine/Resources/Model.cpp"
-        "include/Engine/Resources/ModelLoader.h" 
-        "include/Engine/Resources/ImageLoader.h"
-        "include/Engine/Resources/ImageLoader.cpp" 
-        "include/Engine/Resources/ModelLoader.cpp"
-        
+
+        # Loaders
+        "include/Engine/Resources/Loaders/ModelLoader.h"
+        "include/Engine/Resources/Loaders/ModelLoader.cpp"
+        "include/Engine/Resources/Loaders/Texture2DLoader.h"
+        "include/Engine/Resources/Loaders/Texture2DLoader.cpp" 
+
         # LL Renderer
-        "include/Engine/LLRenderer/Vertex.h"
-        "include/Engine/LLRenderer/Buffers.h"
         "include/Engine/LLRenderer/RenderDevice.h"
         "include/Engine/LLRenderer/RenderDevice.cpp"
         "include/Engine/LLRenderer/ErrorLogger.h" 
-        "include/Engine/LLRenderer/Handles.h"
-
+        
         # Utility
         "include/Engine/Utility/Singleton.h"  
         "include/Engine/Utility/FlagEnum.h"    
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h" 
-  )
+    )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

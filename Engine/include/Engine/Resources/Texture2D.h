@@ -1,34 +1,24 @@
 #pragma once
-#include <Engine/Resources/Image.h>
 #include <string>
 
 namespace Eng {
-
-	enum class Texture2DUsage
-	{
-		DIFFUSE,
-		SPECULAR,
-		NORMAL,
-	};
-
 	class Texture2D {
 	public:
-		Texture2D();
+		Texture2D() = default;
+		Texture2D(Texture2D&& other) noexcept ;
 		Texture2D(const Texture2D& other);
-		Texture2D(Texture2D&& other) noexcept;
-		~Texture2D();
+		void LoadFromFile(const std::string& filePath);
 		int GetWidth() const;
 		int GetHeight() const;
-		const Texture2DUsage usage;
+		int GetNumberOfChannels() const;
+		const std::string& GetPath() const;
 		unsigned char* GetData() const;
-		static Texture2D* LoadFromDisk(const std::string& path);
+		friend class Texture2DLoader;
 	private:
-		Image img;
-		std::string file_path;
-	};
-
-	struct Texture2DHandle {
-		Texture2DUsage usage = Texture2DUsage::DIFFUSE;
-		std::string file_path{};
+		int _width = 0;
+		int _height = 0;
+		int _nr_channels = 0;
+		unsigned char* _data = nullptr;
+		std::string _file_path;
 	};
 }
