@@ -11,15 +11,18 @@ namespace Eng {
 	{
 		const size_t img_data_size = 4ll * other.img.height * other.img.width;
 		img = other.img;
+		file_path = other.file_path;
 		img.data = (unsigned char*)new unsigned char[img_data_size]();
 		if (other.img.data != nullptr) {
 			memcpy(img.data, other.img.data, img_data_size);
 		}
 	}
 
-	Texture2D::Texture2D(Texture2D&& other) noexcept : usage{ other.usage }
+	Texture2D::Texture2D(Texture2D&& other) noexcept
+		: usage{ other.usage },
+		img{ std::move(other.img) },
+		file_path(std::move(other.file_path))
 	{
-		img = other.img;
 		other.img.data = nullptr;
 	}
 
