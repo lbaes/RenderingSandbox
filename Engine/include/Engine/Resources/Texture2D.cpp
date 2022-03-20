@@ -20,6 +20,11 @@ namespace Eng {
 		}
 	}
 
+    Texture2D::~Texture2D() {
+        Texture2DLoader::Unload(*this);
+        _data = nullptr;
+    }
+
 	void Texture2D::LoadFromFile(const std::string& filePath)
 	{
 		Texture2DLoader::Load(filePath, *this);

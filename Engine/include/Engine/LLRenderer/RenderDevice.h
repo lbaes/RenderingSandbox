@@ -1,9 +1,18 @@
 #pragma once
+#if defined(ENG_WINDOWS) || defined(ENG_LINUX)
+    #include "OpenGL/GLTexture.h"
+    #include "OpenGL/GLShader.h"
+    #include "OpenGL/GLMesh.h"
+    #include "OpenGL/GLModel.h"
+    using GPUTextureHandle = Eng::ogl::GLTexture;
+    using GPUShaderHandle = Eng::ogl::GLShader;
+    using GPUMeshHandle = Eng::ogl::GLMesh;
+    using GPUModelHandle = Eng::ogl::GLModel;
+#endif
+#include <unordered_map>
+#include <string>
 
 namespace Eng {
-
-	class VertexBuffer;
-	class IndexBuffer;
 	class Texture2D;
 	class Shader;
 	class Mesh;
@@ -12,12 +21,12 @@ namespace Eng {
 	public:
 	public:
 		void InitRenderDevice();
-		BufferGPUHandle CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const;
-		Texture2DGPUHandle CreateTexture2D(const Texture2D& tex) const;
-		ShaderGPUHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const;
-		MeshGPUHandle CreateMesh(const Mesh& mesh) const;
-		ModelGPUHandle CreateModel(const Model& model) const;
+        GPUTextureHandle CreateTexture2D(const Texture2D& tex);
+        GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
+        GPUMeshHandle CreateMesh(const Mesh& mesh);
+		GPUModelHandle CreateModel(const Model& model);
 	private:
 		bool initialized = false;
+        std::unordered_map<std::string, GPUTextureHandle> loaded_textures;
 	};
 }

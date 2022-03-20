@@ -67,16 +67,15 @@ add_library(Engine SHARED
 
         # LL Renderer
         "include/Engine/LLRenderer/RenderDevice.h"
-        "include/Engine/LLRenderer/RenderDevice.cpp"
-        "include/Engine/LLRenderer/ErrorLogger.h" 
+        "include/Engine/LLRenderer/ErrorLogger.h"
         
         # Utility
         "include/Engine/Utility/Singleton.h"  
         "include/Engine/Utility/FlagEnum.h"    
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
-        "include/Engine/Utility/TypeString.h" 
-    )
+        "include/Engine/Utility/TypeString.h"
+        include/Engine/Resources/Texture2DMeshHandle.h include/Engine/LLRenderer/OpenGL/GLTexture.h include/Engine/LLRenderer/OpenGL/GLShader.h include/Engine/LLRenderer/OpenGL/GLMesh.h include/Engine/LLRenderer/OpenGL/GLModel.h include/Engine/LLRenderer/OpenGL/GLRenderDevice.cpp include/Engine/LLRenderer/Renderer.cpp include/Engine/LLRenderer/Renderer.h include/Engine/Core/Types/Transform.h)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

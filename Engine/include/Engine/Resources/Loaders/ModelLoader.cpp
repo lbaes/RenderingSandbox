@@ -2,21 +2,17 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <iostream>
-#include <unordered_map>
+#include <string>
 #include "ModelLoader.h"
-#include "Engine/Resources/Texture2D.h"
-#include "Engine/Core/Types/HashedString.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Model.h"
 
 namespace Eng {
 
-    void ProcessNode(aiNode* node, const aiScene* scene, Model& model);
-    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    void ProcessNode(aiNode* node, const aiScene* scene, Model& model, const std::string& file_directory);
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene, const std::string& file_directory);
 
-    ModelLoader::ModelLoader()
-    {
-    }
-
-    Model* ModelLoader::LoadModel(const std::string& path) const
+    void ModelLoader::LoadModel(const std::string& path, Model& model )
 	{
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -26,33 +22,30 @@ namespace Eng {
             std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
             throw std::runtime_error("RESOURCE LOAD ERROR");
         }
-        //directory = path.substr(0, path.find_last_of('/'));
-
-	    Model* model = new Model();
-        ProcessNode(scene->mRootNode, scene, *model);
-		return model;
+        std::string file_directory = path.substr(0, path.find_last_of('/'));
+        ProcessNode(scene->mRootNode, scene, model, file_directory);
 	}
 
-    void ProcessNode(aiNode* node, const aiScene* scene, Model& model)
+    void ProcessNode(aiNode* node, const aiScene* scene, Model& model, const std::string& file_directory)
     {
         // process all the node's meshes (if any)
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            model.AddMesh(ProcessMesh(mesh, scene));
+            model.AddMesh(ProcessMesh(mesh, scene, file_directory));
         }
         // then do the same for each of its children
         for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
-            ProcessNode(node->mChildren[i], scene, model);
+            ProcessNode(node->mChildren[i], scene, model, file_directory);
         }
     }
 
-    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene, const std::string& file_directory)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture2DHandle> textures;
+        std::vector<Texture2DMeshHandle> textures;
 
         // Normals
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -101,14 +94,14 @@ namespace Eng {
             {
                 aiString str;
                 mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-                const char* filename = str.C_Str();
-                auto file_key = hash_string(filename);
-                Texture2DHandle tex_handle;
-                tex_handle.usage = Texture2DUsage::DIFFUSE;
-                textures.push_back(tex_handle);
+                std::string filename = file_directory + '/' + str.C_Str();
+                Texture2DMeshHandle texture2DMeshHandle;
+                texture2DMeshHandle.file_path = filename;
+                texture2DMeshHandle.usage = Texture2DMeshUsage::DIFFUSE;
+                textures.push_back(texture2DMeshHandle);
             }
         }
 
-        return Mesh{ vertices, indices, textures };
+        return Mesh{ std::move(vertices), std::move(indices), std::move(textures) };
     }
 }

@@ -10,16 +10,12 @@ namespace Eng {
 			switch (severity)
 			{
 			case GL_DEBUG_SEVERITY_HIGH:
-				logger->LogError("GL DEBUG: {}", std::string(message));
-				break;
-			case GL_DEBUG_SEVERITY_MEDIUM:
+            case GL_DEBUG_SEVERITY_MEDIUM:
 				logger->LogError("GL DEBUG: {}", std::string(message));
 				break;
 			case GL_DEBUG_SEVERITY_LOW:
-				logger->LogInfo("GL DEBUG: {}", std::string(message));
-				break;
-			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				logger->LogInfo("GL DEBUG: {}", std::string(message));
+            case GL_DEBUG_SEVERITY_NOTIFICATION:
+                logger->LogInfo("GL DEBUG: {}", std::string(message));
 				break;
 			default:
 				break;

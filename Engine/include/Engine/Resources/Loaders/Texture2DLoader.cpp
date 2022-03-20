@@ -14,3 +14,8 @@ void Eng::Texture2DLoader::Load(const std::string& filePath, Eng::Texture2D& out
 		throw ImageLoaderException(error_msg.str());
 	}
 }
+
+void Eng::Texture2DLoader::Unload(Eng::Texture2D &texture) {
+    if (texture._data == nullptr)
+        stbi_image_free(texture._data);
+}

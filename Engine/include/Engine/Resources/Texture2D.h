@@ -7,6 +7,7 @@ namespace Eng {
 		Texture2D() = default;
 		Texture2D(Texture2D&& other) noexcept ;
 		Texture2D(const Texture2D& other);
+        ~Texture2D();
 		void LoadFromFile(const std::string& filePath);
 		int GetWidth() const;
 		int GetHeight() const;

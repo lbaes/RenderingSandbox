@@ -6,11 +6,16 @@ namespace Eng {
 	class Model {
 	public:
 		Model() = default;
-		Model(const std::vector<Mesh>& mesh);
-		void AddMesh(const Mesh& mesh);
-		const std::vector<Mesh> GetMeshes() const;
-		static Model LoadFromDisk(const std::string& file);
-	private:
-		std::vector<Mesh> meshes;
-	};
+        Model(Model&& other) noexcept = default;
+        Model(const Model& other) = default;
+        void LoadFromFile(const std::string& filepath);
+        void LoadFromMeshes(std::vector<Mesh> meshes_);
+		const std::vector<Mesh>& GetMeshes() const;
+
+        void AddMesh(const Mesh& mesh);
+
+    private:
+		std::vector<Mesh> meshes{};
+        std::string file_path;
+    };
 }
