@@ -2,6 +2,7 @@
 #include "Engine/Core/Logger.h"
 #include "Engine/Platform/Timer.h"
 #include "Engine/Resources/Model.h"
+#include "Engine/Resources/Shader.h"
 #include <memory>
 
 #if defined(ENG_WINDOWS) || defined(ENG_LINUX)
@@ -18,6 +19,7 @@ namespace Eng
 		window->CreateWindow("Application", 800, 400);
 		input = GetInput();
 		renderDevice = std::make_unique<RenderDevice>();
+		renderer = std::make_unique<Renderer>();
         logger = Logger::GetLogger();
 	};
 
@@ -32,10 +34,34 @@ namespace Eng
 		isRunning = true;
 		OnStart();
 
-		// load stuff
+        glClearColor(52.0/255.0, 186.0/255.0, 235.0/255.0, 255.0/255.0);
+
+        // load shaders
+        Shader vShader = Shader::LoadFromDisk("resources/vModel.glsl");
+        Shader fShader = Shader::LoadFromDisk("resources/fModel.glsl");
+        auto shader_handle = renderDevice->CreateShaderProgram(vShader, fShader);
+
+        // Load model
         Model model;
         model.LoadFromFile("resources/monkey/monkey.obj");
         auto model_handle = renderDevice->CreateModel(model);
+
+        // Setup Camera
+        Camera camera;
+        camera.SetCameraPos({{0.0, 0.0, 3.0},
+                             {0.0, 0.0, 0.0},
+                             {0.0, 1.0, 0.0}, -90.0f, 0.0f});
+        float aspectRatio = static_cast<float>(window->GetWidth())/static_cast<float>(window->GetHeight());
+        camera.SetProjection(90, aspectRatio);
+
+        // Setup transform
+        Transform t{{0.0, 0.0, 0.0},
+                    {10.0, 10.0, 10.0},
+                    {1.0f, 0.0f, 0.0f}, 0.0f};
+
+        // Setup renderer
+        renderer->SetShader(shader_handle);
+        renderer->SetCamera(camera);
 
 		const double ms_per_update = 50.0;
 		Timer simulation_timer;
@@ -49,13 +75,15 @@ namespace Eng
 			previous = current;
 			lag += elapsed;
 			input->Update();
-			while (lag >= ms_per_update) {
-				OnUpdate();
-				window->Update();
-				lag -= ms_per_update;
-			}
+//			while (lag >= ms_per_update) {
+//
+//			}
+            OnUpdate();
+            window->Update();
+            lag -= ms_per_update;
 			// Render stuff
-
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            renderer->RenderModel(model_handle, t);
 		}
 		return 0;
 	}

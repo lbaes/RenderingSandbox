@@ -29,9 +29,11 @@ namespace Eng {
 		return shader_type;
 	}
 
-	ShaderType GetShaderTypeFromFileName(const std::string& filename) {
-		auto firstChar = filename[0];
-		switch (firstChar)
+	ShaderType GetShaderTypeFromFileName(const std::string& file_path) {
+        auto firstCharIndex = file_path.find_last_of('/') + 1;
+        if (firstCharIndex >= file_path.size())
+            goto error_label;
+		switch (file_path[firstCharIndex])
 		{
 		case 'f':
 			return ShaderType::FRAGMENT;
@@ -46,8 +48,9 @@ namespace Eng {
 			return ShaderType::GEOMETRY;
 			break;
 		default:
+            error_label:
 			std::stringstream error_msg;
-			error_msg << "COULD NOT DETERMINE SHADER TYPE FROM FILENAME: " << filename;
+			error_msg << "COULD NOT DETERMINE SHADER TYPE FROM FILENAME: " << file_path;
 			throw std::runtime_error(error_msg.str());
 			break;
 		}

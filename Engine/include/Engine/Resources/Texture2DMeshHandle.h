@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 namespace Eng {
-    enum class Texture2DMeshUsage {
+    enum class Texture2DUsage {
         DIFFUSE,
         SPECULAR,
         NORMAL,
@@ -10,6 +10,6 @@ namespace Eng {
 
     struct Texture2DMeshHandle {
         std::string file_path;
-        Texture2DMeshUsage usage{};
+        Texture2DUsage usage{};
     };
 }

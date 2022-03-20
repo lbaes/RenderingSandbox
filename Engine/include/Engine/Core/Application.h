@@ -8,6 +8,7 @@
 #include "Engine/Core/Input.h"
 #include "Engine/Core/Logger.h"
 #include "Engine/LLRenderer/RenderDevice.h"
+#include "Engine/LLRenderer/Renderer.h"
 
 namespace Eng
 {
@@ -38,6 +39,7 @@ namespace Eng
 		Input* input;
 		Logger* logger;
 		std::unique_ptr<RenderDevice> renderDevice;
+		std::unique_ptr<Renderer> renderer;
 		bool isRunning;
 	};
 }

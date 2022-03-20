@@ -97,7 +97,7 @@ namespace Eng {
                 std::string filename = file_directory + '/' + str.C_Str();
                 Texture2DMeshHandle texture2DMeshHandle;
                 texture2DMeshHandle.file_path = filename;
-                texture2DMeshHandle.usage = Texture2DMeshUsage::DIFFUSE;
+                texture2DMeshHandle.usage = Texture2DUsage::DIFFUSE;
                 textures.push_back(texture2DMeshHandle);
             }
         }

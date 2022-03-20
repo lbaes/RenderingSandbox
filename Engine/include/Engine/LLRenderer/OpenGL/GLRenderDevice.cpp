@@ -155,6 +155,7 @@ namespace Eng {
         m.VAO = bh.VAO;
         m.VBO = bh.VBO;
         m.EBO = bh.EBO;
+        m.index_count = static_cast<GLsizei>(mesh.indices.size());
 
         // Loads textures into GPU
         for (const auto& texture : mesh.textures) {
@@ -162,6 +163,7 @@ namespace Eng {
                 Texture2D loaded_texture;
                 loaded_texture.LoadFromFile(texture.file_path);
                 auto tex_handle = CreateTexture2D(loaded_texture);
+                tex_handle.usage = texture.usage;
                 loaded_textures.emplace(texture.file_path, tex_handle);
                 m.textures.push_back(tex_handle);
             }else{

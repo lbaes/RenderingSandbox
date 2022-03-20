@@ -75,7 +75,7 @@ add_library(Engine SHARED
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h"
-        include/Engine/Resources/Texture2DMeshHandle.h include/Engine/LLRenderer/OpenGL/GLTexture.h include/Engine/LLRenderer/OpenGL/GLShader.h include/Engine/LLRenderer/OpenGL/GLMesh.h include/Engine/LLRenderer/OpenGL/GLModel.h include/Engine/LLRenderer/OpenGL/GLRenderDevice.cpp include/Engine/LLRenderer/Renderer.cpp include/Engine/LLRenderer/Renderer.h include/Engine/Core/Types/Transform.h)
+        include/Engine/Resources/Texture2DMeshHandle.h include/Engine/LLRenderer/OpenGL/GLTexture.h include/Engine/LLRenderer/OpenGL/GLShader.h include/Engine/LLRenderer/OpenGL/GLMesh.h include/Engine/LLRenderer/OpenGL/GLModel.h include/Engine/LLRenderer/OpenGL/GLRenderDevice.cpp include/Engine/LLRenderer/Renderer.cpp include/Engine/LLRenderer/Renderer.h include/Engine/Core/Types/Transform.h include/Engine/LLRenderer/OpenGL/Camera.h)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")
