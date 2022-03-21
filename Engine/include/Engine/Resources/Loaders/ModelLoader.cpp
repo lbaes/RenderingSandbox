@@ -58,11 +58,13 @@ namespace Eng {
             vec.z = mesh->mVertices[i].z;
             vertex.position = vec;
 
-            // normals 
-            vec.x = mesh->mNormals[i].x;
-            vec.y = mesh->mNormals[i].y;
-            vec.z = mesh->mNormals[i].z;
-            vertex.vertex_normal = vec;
+            // normals
+            if (mesh->HasNormals()) {
+                vec.x = mesh->mNormals[i].x;
+                vec.y = mesh->mNormals[i].y;
+                vec.z = mesh->mNormals[i].z;
+                vertex.vertex_normal = vec;
+            }
 
             // texture coordinates
             if (mesh->mTextureCoords[0]) {

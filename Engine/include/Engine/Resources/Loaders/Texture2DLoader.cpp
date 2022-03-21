@@ -7,12 +7,14 @@
 void Eng::Texture2DLoader::Load(const std::string& filePath, Eng::Texture2D& outTexture)
 {
 	outTexture._file_path = filePath;
-	auto data = stbi_load(filePath.c_str(), &outTexture._width, &outTexture._height, &outTexture._nr_channels, 4);
+    stbi_set_flip_vertically_on_load(true);
+    auto data = stbi_load(filePath.c_str(), &outTexture._width, &outTexture._height, &outTexture._nr_channels, 4);
 	if (data == nullptr) {
 		std::stringstream error_msg;
 		error_msg << "Failed to load requested image: \"" << filePath << "\". Reason: "<< stbi_failure_reason() << "\n";
 		throw ImageLoaderException(error_msg.str());
 	}
+    outTexture._data = data;
 }
 
 void Eng::Texture2DLoader::Unload(Eng::Texture2D &texture) {

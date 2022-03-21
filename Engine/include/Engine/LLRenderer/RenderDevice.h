@@ -11,6 +11,7 @@
 #endif
 #include <unordered_map>
 #include <string>
+#include "Engine/Core/Logger.h"
 
 namespace Eng {
 	class Texture2D;
@@ -28,5 +29,6 @@ namespace Eng {
 	private:
 		bool initialized = false;
         std::unordered_map<std::string, GPUTextureHandle> loaded_textures;
+        Logger* logger = nullptr;
 	};
 }

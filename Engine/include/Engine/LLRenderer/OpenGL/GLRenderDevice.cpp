@@ -26,11 +26,13 @@ namespace Eng {
 
     void RenderDevice::InitRenderDevice()
     {
+        logger = Logger::GetLogger();
 #ifdef ENGINE_DEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(ErrorLogger::gl_error_logger, nullptr);
 #endif // ENGINE_DEBUG
+        glEnable(GL_DEPTH_TEST);
         initialized = true;
     }
 
@@ -41,26 +43,26 @@ namespace Eng {
     /// <returns>ID used to refer to the texture</returns>
     GPUTextureHandle RenderDevice::CreateTexture2D(const Texture2D& tex)
     {
-        unsigned int texture_id;
+        logger->LogInfo("Loading texture {}", tex.GetPath());
+        unsigned int texture_id = 0;
         glGenTextures(1, &texture_id);
         glBindTexture(GL_TEXTURE_2D, texture_id);
 
-        // TODO: make parameters configurable
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
         // Copy bytes to opengl texture
+        assert(tex.GetData() != nullptr);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.GetWidth(), tex.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.GetData());
 
-        // Mipmapping
+        // Mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         GPUTextureHandle t;
         t.id = texture_id;
         loaded_textures.emplace(tex.GetPath(), t);
+        logger->LogInfo("loaded texture {} with id: {}", tex.GetPath(), t.id);
         return t;
     }
 
@@ -77,18 +79,11 @@ namespace Eng {
 
         // Copy vertex data to VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexBuffer.size(), vertexBuffer.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexBuffer.size(), &vertexBuffer[0], GL_STATIC_DRAW);
 
         // Copy index data to EBO
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), indexBuffer.data(), GL_STATIC_DRAW);
-
-        // Unbind VAO
-        glBindVertexArray(0);
-
-        // Unbind buffers
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), &indexBuffer[0], GL_STATIC_DRAW);
 
         BufferHandles bh;
         bh.VAO = vao_id;
@@ -104,18 +99,21 @@ namespace Eng {
         const auto vShaderCode = vertexShader.GetShaderSource().c_str();
 
         // Vertex Shader
+        logger->LogInfo("Creating vertex shader");
         vShaderID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vShaderID, 1, &vShaderCode, NULL);
         glCompileShader(vShaderID);
         CheckCompileErrors(vShaderID, "VERTEX");
 
         // Fragment Shader
+        logger->LogInfo("Creating fragment shader");
         fShaderID = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fShaderID, 1, &fShaderCode, NULL);
         glCompileShader(fShaderID);
         CheckCompileErrors(fShaderID, "FRAGMENT");
 
         // Shader Program
+        logger->LogInfo("Creating shader program");
         programID = glCreateProgram();
         glAttachShader(programID, vShaderID);
         glAttachShader(programID, fShaderID);
@@ -128,12 +126,14 @@ namespace Eng {
 
         GPUShaderHandle sh;
         sh.id = programID;
-
+        logger->LogInfo("Created shader program with ID: {}", sh.id);
         return sh;
     }
 
     GPUMeshHandle RenderDevice::CreateMesh(const Mesh& mesh)
     {
+        logger->LogInfo("Creating Mesh with:\n\t{} vertices\n\t{} indices\n\t{} textures",
+                        mesh.vertices.size(), mesh.indices.size(), mesh.textures.size());
         // Create Buffers
         BufferHandles bh = CreateBuffers(mesh.vertices, mesh.indices);
 
@@ -151,6 +151,7 @@ namespace Eng {
 
         // unbind
         glBindVertexArray(0);
+
         GPUMeshHandle m;
         m.VAO = bh.VAO;
         m.VBO = bh.VBO;
@@ -174,6 +175,7 @@ namespace Eng {
     }
 
     GPUModelHandle RenderDevice::CreateModel(const Model& model) {
+        logger->LogInfo("Creating model with\n\t{} meshes", model.GetMeshes().size());
         GPUModelHandle modelHandle;
         for (const auto& mesh : model.GetMeshes()) {
             auto mesh_handle = CreateMesh(mesh);

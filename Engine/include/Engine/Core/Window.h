@@ -8,6 +8,8 @@ namespace Eng
 	struct WindowData {
 		int width;
 		int height;
+        int pixel_width;
+        int pixel_height;
 	};
 
 	class Window
@@ -20,6 +22,8 @@ namespace Eng
 		virtual void CloseWindow() = 0;
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
+        virtual int GetPixelWidth() const =0;
+        virtual int GetPixelHeight() const =0;
 		virtual void SetTitle(const std::string& title) const = 0;
 		bool IsOpen();
 	protected:
