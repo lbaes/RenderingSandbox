@@ -2,7 +2,7 @@
 add_subdirectory(external)
 
 # compile engine
-add_library(Engine SHARED
+add_library(Engine STATIC
         # Source
         "src/Application.cpp"
         "src/Window.cpp"
@@ -29,19 +29,20 @@ add_library(Engine SHARED
         "include/Engine/Core/Types/Vec.h"
         "include/Engine/Core/Types/Color.h"
         "include/Engine/Core/Types/Vertex.h"
+        include/Engine/Core/Types/Transform.h
+
 
         # Core
         "include/Engine/Engine.h"
         "include/Engine/Core/Application.h"
         "include/Engine/Core/Core.h"
-        "include/Engine/Core/Startup.h"
         "include/Engine/Core/Logger.h"
         "include/Engine/Core/Keys.h"
         "include/Engine/Core/Window.h"
         "include/Engine/Core/Input.h"
         "include/Engine/Core/EngineConfig.h"
         "include/Engine/Core/EngineConfigParser.h"
-        
+
         # Events
         "include/Engine/Events/EventDispatcher.h"
         "include/Engine/Events/EventBase.h"
@@ -58,6 +59,7 @@ add_library(Engine SHARED
         "include/Engine/Resources/Mesh.h"
         "include/Engine/Resources/Model.h"
         "include/Engine/Resources/Model.cpp"
+        include/Engine/Resources/Texture2DMeshHandle.h
 
         # Loaders
         "include/Engine/Resources/Loaders/ModelLoader.h"
@@ -68,14 +70,24 @@ add_library(Engine SHARED
         # LL Renderer
         "include/Engine/LLRenderer/RenderDevice.h"
         "include/Engine/LLRenderer/ErrorLogger.h"
-        
+        include/Engine/LLRenderer/OpenGL/GLTexture.h
+        include/Engine/LLRenderer/OpenGL/GLShader.h
+        include/Engine/LLRenderer/OpenGL/GLMesh.h
+        include/Engine/LLRenderer/OpenGL/GLModel.h
+        include/Engine/LLRenderer/OpenGL/GLRenderDevice.cpp
+        include/Engine/LLRenderer/OpenGL/GLRenderer.cpp
+        include/Engine/LLRenderer/OpenGL/GLRenderer.h
+        include/Engine/LLRenderer/Camera.h
+        include/Engine/LLRenderer/Camera.cpp
+        include/Engine/LLRenderer/Renderer.h
+
         # Utility
         "include/Engine/Utility/Singleton.h"  
         "include/Engine/Utility/FlagEnum.h"    
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h"
-        include/Engine/Resources/Texture2DMeshHandle.h include/Engine/LLRenderer/OpenGL/GLTexture.h include/Engine/LLRenderer/OpenGL/GLShader.h include/Engine/LLRenderer/OpenGL/GLMesh.h include/Engine/LLRenderer/OpenGL/GLModel.h include/Engine/LLRenderer/OpenGL/GLRenderDevice.cpp include/Engine/LLRenderer/Renderer.cpp include/Engine/LLRenderer/Renderer.h include/Engine/Core/Types/Transform.h include/Engine/LLRenderer/OpenGL/Camera.h)
+        )
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

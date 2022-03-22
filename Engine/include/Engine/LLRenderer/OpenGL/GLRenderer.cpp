@@ -1,7 +1,7 @@
-#include "Renderer.h"
+#include "GLRenderer.h"
 #include "glad/glad.h"
 
-void Eng::Renderer::RenderModel(const GPUModelHandle& model, Eng::Transform t) {
+void Eng::GLRenderer::RenderModel(const GPUModelHandle& model, Eng::Transform t) {
     _shader.use();
     _shader.uniform_set("model", t.GetTransformation());
     _shader.uniform_set("view", _camera.GetView());
@@ -11,7 +11,7 @@ void Eng::Renderer::RenderModel(const GPUModelHandle& model, Eng::Transform t) {
     }
 }
 
-void Eng::Renderer::RenderMesh(const GPUMeshHandle& mesh) {
+void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
     unsigned int diffuseNr  = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr   = 1;
@@ -47,10 +47,10 @@ void Eng::Renderer::RenderMesh(const GPUMeshHandle& mesh) {
     glActiveTexture(GL_TEXTURE0);
 }
 
-void Eng::Renderer::SetShader(GPUShaderHandle shader) {
+void Eng::GLRenderer::SetShader(GPUShaderHandle shader) {
     _shader = shader;
 }
 
-void Eng::Renderer::SetCamera(const Eng::Camera &camera) {
+void Eng::GLRenderer::SetCamera(const Eng::Camera &camera) {
     _camera = camera;
 }

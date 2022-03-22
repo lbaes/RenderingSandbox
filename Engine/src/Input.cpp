@@ -10,7 +10,7 @@ namespace Eng {
 
 	bool Input::IsKeyDown(Keys key)
 	{
-		return key_pressed[KeyToCode(key)] == KeyState::PRESSED;
+		return key_pressed[KeyToCode(key)] == KeyState::PRESSED || key_pressed[KeyToCode(key)] == KeyState::REPEAT;
 	}
 
 	bool Input::IsKeyUp(Keys key)

@@ -12,13 +12,10 @@
 
 namespace Eng
 {
-	class EG_API Application;
 
-	EG_API Application* GetApplication();
 	Window* GetWindow();
 	Input* GetInput();
-
-	class EG_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -26,20 +23,27 @@ namespace Eng
 		int Start();
 
 	protected:
-		static Application* app;
 		virtual void OnStart(){};
 		virtual void OnUpdate(){};
+		virtual void Draw(){};
+
+//		GPUShaderHandle CreateShaderProgram(const Shader& shader);
+//		GPUModelHandle CreateModel(const Model& model);
+//		void RenderModel(const GPUModelHandle& gpuModelHandle);
+//
+//		int GetWindowHeight() const;
+//		int GetWindowWidth() const;
+		Window* window;
+		Input* input;
+		std::unique_ptr<RenderDevice> renderDevice;
+		std::unique_ptr<Renderer> renderer;
 
 	private:
-		friend EG_API Application* GetApplication();
 		friend Window* GetWindow();
 		friend Input* GetInput();
 
-		Window* window;
-		Input* input;
 		Logger* logger;
-		std::unique_ptr<RenderDevice> renderDevice;
-		std::unique_ptr<Renderer> renderer;
+
 		bool isRunning;
 	};
 }

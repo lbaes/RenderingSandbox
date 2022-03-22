@@ -20,7 +20,6 @@ namespace Eng {
 	class Model;
 	class RenderDevice {
 	public:
-	public:
 		void InitRenderDevice();
         GPUTextureHandle CreateTexture2D(const Texture2D& tex);
         GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
