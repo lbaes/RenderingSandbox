@@ -8,6 +8,7 @@ namespace Eng {
     class GLRenderer : public Renderer{
     public:
         void RenderModel(const GPUModelHandle& model, Transform t) override;
+        void RenderLine(const GPULineHandle& line) override;
         void RenderMesh(const GPUMeshHandle& mesh);
         void SetShader(GPUShaderHandle shader) override;
         void SetCamera(const Camera& camera) override;

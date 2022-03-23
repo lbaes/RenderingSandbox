@@ -87,7 +87,7 @@ add_library(Engine STATIC
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h"
-        )
+        include/Engine/Core/Types/Line.h include/Engine/LLRenderer/OpenGL/GLLine.h)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")

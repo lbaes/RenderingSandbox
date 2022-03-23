@@ -13,6 +13,13 @@
 
 #endif
 
+#ifdef ENG_WINDOWS
+typedef unsigned long DWORD;
+extern "C" {
+_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
+#endif
+
 namespace Eng {
     Application::Application() : window{nullptr}, input{nullptr}, isRunning{false} {
         window = GetWindow();
@@ -31,23 +38,11 @@ namespace Eng {
         isRunning = true;
 		glClearColor(52.0 / 255.0, 186.0 / 255.0, 235.0 / 255.0, 255.0 / 255.0);
 		OnStart();
-        const double ms_per_update = 50.0;
-        Timer simulation_timer;
-        simulation_timer.Start();
-        double previous = simulation_timer.GetTime();
-        double lag = 0.0;
         while (window->IsOpen()) {
-            double current = simulation_timer.GetTime();
-            double elapsed = current - previous;
-            previous = current;
-            lag += elapsed;
 			input->Update();
-			while (lag >= ms_per_update) {
-				window->Update();
-				OnUpdate();
-				lag -= ms_per_update;
-			}
+            OnUpdate();
 			Draw();
+            window->Update();
         }
         return 0;
     }

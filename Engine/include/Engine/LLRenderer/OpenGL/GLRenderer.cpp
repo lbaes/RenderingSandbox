@@ -47,6 +47,17 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
     glActiveTexture(GL_TEXTURE0);
 }
 
+void Eng::GLRenderer::RenderLine(const GPULineHandle &line) {
+    _shader.use();
+    _shader.uniform_set("model", Transform().GetTransformation());
+    _shader.uniform_set("view", _camera.GetView());
+    _shader.uniform_set("projection", _camera.GetProjection());
+    _shader.uniform_set("color", {1.0f, 1.0f, 1.0f, 1.0f});
+    glBindVertexArray(line.VAO);
+    glDrawArrays(GL_LINES, 0, 2);
+    glBindVertexArray(0);
+}
+
 void Eng::GLRenderer::SetShader(GPUShaderHandle shader) {
     _shader = shader;
 }

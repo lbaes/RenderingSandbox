@@ -31,6 +31,10 @@ namespace Eng {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(ErrorLogger::gl_error_logger, nullptr);
+        logger->LogInfo("Vendor: {}", glGetString(GL_VENDOR));
+        logger->LogInfo("Renderer: {}", glGetString(GL_RENDERER));
+        logger->LogInfo("Version: {}", glGetString(GL_VERSION));
+        logger->LogInfo("GLSL Version: {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
 #endif // ENGINE_DEBUG
         glEnable(GL_DEPTH_TEST);
         initialized = true;
@@ -182,6 +186,34 @@ namespace Eng {
             modelHandle.meshes.push_back(mesh_handle);
         }
         return modelHandle;
+    }
+
+    GPULineHandle RenderDevice::CreateLine(const Line &line) {
+        // Unbind
+        glBindVertexArray(0);
+
+        // Create buffers
+        unsigned int vbo_id, vao_id;
+        glGenBuffers(1, &vbo_id);
+        glGenVertexArrays(1, &vao_id);
+
+        // Bind VAO
+        glBindVertexArray(vao_id);
+
+        // Copy vertex data to VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Line), &line, GL_STATIC_DRAW);
+
+        // Bind attributes
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(line.p1), (void*)0);
+
+        // Unbind
+        glBindVertexArray(0);
+
+        GPULineHandle lineHandle;
+        lineHandle.VAO = vao_id;
+        return lineHandle;
     }
 
     constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage) {
