@@ -66,6 +66,12 @@ public:
         line_handle = renderDevice->CreateLine(line);
         line_handle2 = renderDevice->CreateLine(line2);
 
+        // Lights
+        Vec3 light_pos = {5.0f, 10.0f, 5.0f};
+        model_shader_handle.use();
+        model_shader_handle.uniform_set("light.position", light_pos);
+        model_shader_handle.uniform_set("light.diffuse", Vec3{1.0, 1.0, 1.0});
+
 		renderer->SetCamera(camera);
 
 		// Start timer;
@@ -100,9 +106,11 @@ public:
 		// Render stuff
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // draw model
         renderer->SetShader(model_shader_handle);
 		renderer->RenderModel(model_handle, t);
 
+        // draw lines
         renderer->SetShader(line_shader_handle);
         renderer->RenderLine(line_handle);
         renderer->RenderLine(line_handle2);

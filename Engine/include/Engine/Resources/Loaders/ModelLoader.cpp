@@ -11,6 +11,8 @@ namespace Eng {
 
     void ProcessNode(aiNode* node, const aiScene* scene, Model& model, const std::string& file_directory);
     Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene, const std::string& file_directory);
+    void LoadTexture(aiMaterial* mat, aiTextureType texture_type, Texture2DUsage engine_usage,
+                     const std::string& file_directory, std::vector<Texture2DMeshHandle>& textures);
 
     void ModelLoader::LoadModel(const std::string& path, Model& model )
 	{
@@ -92,18 +94,26 @@ namespace Eng {
         if (mesh->mMaterialIndex >= 0)
         {
             aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-            for (unsigned int i = 0; i < mat->GetTextureCount(aiTextureType_DIFFUSE); i++)
-            {
-                aiString str;
-                mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-                std::string filename = file_directory + '/' + str.C_Str();
-                Texture2DMeshHandle texture2DMeshHandle;
-                texture2DMeshHandle.file_path = filename;
-                texture2DMeshHandle.usage = Texture2DUsage::DIFFUSE;
-                textures.push_back(texture2DMeshHandle);
-            }
+            LoadTexture(mat, aiTextureType_DIFFUSE, Texture2DUsage::DIFFUSE, file_directory, textures);
+            LoadTexture(mat, aiTextureType_SPECULAR, Texture2DUsage::SPECULAR, file_directory, textures);
+            LoadTexture(mat, aiTextureType_HEIGHT, Texture2DUsage::HEIGHT, file_directory, textures);
+            LoadTexture(mat, aiTextureType_AMBIENT, Texture2DUsage::AMBIENT, file_directory, textures);
         }
 
         return Mesh{ std::move(vertices), std::move(indices), std::move(textures) };
+    }
+
+    void LoadTexture(aiMaterial* mat, aiTextureType texture_type, Texture2DUsage engine_usage,
+                     const std::string& file_directory, std::vector<Texture2DMeshHandle>& textures){
+        for (unsigned int i = 0; i < mat->GetTextureCount(texture_type); i++)
+        {
+            aiString str;
+            mat->GetTexture(texture_type, i, &str);
+            std::string filename = file_directory + '/' + str.C_Str();
+            Texture2DMeshHandle texture2DMeshHandle;
+            texture2DMeshHandle.file_path = filename;
+            texture2DMeshHandle.usage = engine_usage;
+            textures.push_back(texture2DMeshHandle);
+        }
     }
 }

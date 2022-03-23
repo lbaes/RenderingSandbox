@@ -36,7 +36,7 @@ namespace Eng {
     int Application::Start() {
         renderDevice->InitRenderDevice();
         isRunning = true;
-		glClearColor(52.0 / 255.0, 186.0 / 255.0, 235.0 / 255.0, 255.0 / 255.0);
+		// glClearColor(52.0 / 255.0, 186.0 / 255.0, 235.0 / 255.0, 255.0 / 255.0);
 		OnStart();
         while (window->IsOpen()) {
 			input->Update();

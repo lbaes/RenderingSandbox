@@ -6,6 +6,7 @@ namespace Eng {
         SPECULAR,
         NORMAL,
         HEIGHT,
+        AMBIENT
     };
 
     struct Texture2DMeshHandle {

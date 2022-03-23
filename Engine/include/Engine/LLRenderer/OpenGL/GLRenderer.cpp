@@ -4,6 +4,7 @@
 void Eng::GLRenderer::RenderModel(const GPUModelHandle& model, Eng::Transform t) {
     _shader.use();
     _shader.uniform_set("model", t.GetTransformation());
+    _shader.uniform_set("inverse_model", glm::inverse(t.GetTransformation()));
     _shader.uniform_set("view", _camera.GetView());
     _shader.uniform_set("projection", _camera.GetProjection());
     for (const auto& mesh: model.meshes) {
@@ -22,22 +23,22 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
         auto usage = mesh.textures[i].usage;
         std::string name;
         if(usage == Texture2DUsage::DIFFUSE) {
-            name = "texture_diffuse";
+            name = "diffuse";
             number = std::to_string(diffuseNr++);
         }
         else if(usage == Texture2DUsage::SPECULAR) {
-            name = "texture_specular";
+            name = "specular";
             number = std::to_string(specularNr++);
         }
         else if(usage == Texture2DUsage::NORMAL) {
-            name = "texture_normal";
+            name = "normal";
             number = std::to_string(normalNr++);
         }
         else if(usage == Texture2DUsage::HEIGHT) {
-            name = "texture_height";
+            name = "height";
             number = std::to_string(heightNr++);
         }
-        const auto uniform_name = name + number;
+        const auto uniform_name = "material." + (name + number);
         _shader.uniform_set(uniform_name, i);
         glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
     }

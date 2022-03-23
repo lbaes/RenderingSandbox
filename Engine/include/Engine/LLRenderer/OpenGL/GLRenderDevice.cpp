@@ -189,8 +189,6 @@ namespace Eng {
     }
 
     GPULineHandle RenderDevice::CreateLine(const Line &line) {
-        // Unbind
-        glBindVertexArray(0);
 
         // Create buffers
         unsigned int vbo_id, vao_id;
