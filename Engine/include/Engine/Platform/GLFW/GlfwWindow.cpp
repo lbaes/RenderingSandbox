@@ -110,8 +110,8 @@ namespace Eng
 
     void GlfwWindow::FrameBufferResizeCallback(GLFWwindow *windowHandle, int width, int height) {
         auto window = cast_to_window(windowHandle);
-        window->windowData.width = width;
-        window->windowData.height = height;
+        window->windowData.pixel_width = width;
+        window->windowData.pixel_height = height;
         glViewport(0, 0, width, height);
     }
 

@@ -39,6 +39,6 @@ void Eng::Camera::update_projection_matrix(float fovDegrees, float aspectRatio)
 {
 	_fov = fovDegrees;
 	_aspect_ratio = aspectRatio;
-	_projection = glm::perspective(glm::radians(fovDegrees), aspectRatio, 0.1f, 100.0f);
+	_projection = glm::perspective(glm::radians(fovDegrees), aspectRatio, 0.1f, 10000.0f);
 }
 

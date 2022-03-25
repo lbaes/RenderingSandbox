@@ -81,6 +81,7 @@ public:
 	void OnUpdate() override {
 		using namespace Eng;
 		current = simulation_timer.GetTime();
+		aspectRatio = (float) window->GetPixelWidth() / (float) window->GetPixelHeight();
 
 		t = {model_pos, model_scale, model_rotation, rotation_angle};
 
