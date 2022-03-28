@@ -9,11 +9,13 @@ layout (location = 2) in vec2 aTexCoords;
 out vec2 TexCoords;
 out vec3 Normal;
 out vec3 FragPos;// fragment position in world space
+out vec3 ViewPos;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 inverse_model;
+uniform mat4 view_pos;
 
 void main()
 {

@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in vec3 ViewPos;
 
 struct Material {
     sampler2D diffuse1;
@@ -32,12 +33,18 @@ void main()
 
     // Lighting
     vec3 normal = normalize(Normal);
+    vec3 view_direction = normalize(ViewPos - FragPos);
     vec3 light_direction = normalize(light.position - FragPos);
+    vec3 reflection_direction = reflect(-light_direction, normal);
     float diffuse_multiplier = max(dot(normal, light_direction), 0.0);
+    float spec_multiplier = pow(max(dot(view_direction, reflection_direction), 0.0), 32);
 
-    // Final color
+    // Final colors
     vec3 diffuse = diffuse_multiplier * light.diffuse * vec3(texture(material.diffuse1, TexCoords));
     vec3 ambient = light.ambient * vec3(texture(material.diffuse1, TexCoords));
+    vec3 specular = light.specular * spec_multiplier * vec3(texture(material.specular1, TexCoords));
 
-    FragColor = vec4(diffuse, 1.0);
+    // Result
+    vec3 result = diffuse + ambient + specular;
+    FragColor = vec4(result, 1.0);
 }

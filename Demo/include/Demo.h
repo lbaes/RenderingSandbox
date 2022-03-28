@@ -21,9 +21,9 @@ public:
 	double current;
 
 	// Model position
-	Vec3 model_pos = Vec3{0.0, 3.0, 0.0};
+	Vec3 model_pos = Vec3{0.0, 0.0, 0.0};
 	Vec3 model_scale = Vec3{1.0, 1.0, 1.0};
-	Vec3 model_rotation = Vec3{0.0f, 0.0f, 1.0f};
+	Vec3 model_rotation = Vec3{0.0f, 1.0f, 0.0f};
 	float rotation_angle = 0.0f;
 	Transform t;
 
@@ -32,7 +32,7 @@ public:
 	Camera camera;
 	float camZ = 0.0f;
 	float camX = 0.0f;
-	float camY = 3.0f;
+	float camY = 1.0f;
 	float aspectRatio;
 
 	void OnStart() override {
@@ -71,6 +71,8 @@ public:
         model_shader_handle.use();
         model_shader_handle.uniform_set("light.position", light_pos);
         model_shader_handle.uniform_set("light.diffuse", Vec3{1.0, 1.0, 1.0});
+        model_shader_handle.uniform_set("light.ambient", Vec3{0.1, 0.1, 0.1});
+        model_shader_handle.uniform_set("light.specular", Vec3{0.0, 0.0, 0.0});
 
 		renderer->SetCamera(camera);
 

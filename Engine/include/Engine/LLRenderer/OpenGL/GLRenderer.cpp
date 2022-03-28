@@ -7,6 +7,7 @@ void Eng::GLRenderer::RenderModel(const GPUModelHandle& model, Eng::Transform t)
     _shader.uniform_set("inverse_model", glm::inverse(t.GetTransformation()));
     _shader.uniform_set("view", _camera.GetView());
     _shader.uniform_set("projection", _camera.GetProjection());
+	_shader.uniform_set("view_pos", _camera.GetPosition());
     for (const auto& mesh: model.meshes) {
         RenderMesh(mesh);
     }

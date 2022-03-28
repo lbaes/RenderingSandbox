@@ -42,3 +42,8 @@ void Eng::Camera::update_projection_matrix(float fovDegrees, float aspectRatio)
 	_projection = glm::perspective(glm::radians(fovDegrees), aspectRatio, 0.1f, 10000.0f);
 }
 
+Eng::Vec3 Eng::Camera::GetPosition() const
+{
+	return _pos.camera_pos;
+}
+
