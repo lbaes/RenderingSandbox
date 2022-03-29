@@ -31,10 +31,11 @@ namespace Eng {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(ErrorLogger::gl_error_logger, nullptr);
-        logger->LogInfo("Vendor: {}", glGetString(GL_VENDOR));
-        logger->LogInfo("Renderer: {}", glGetString(GL_RENDERER));
-        logger->LogInfo("Version: {}", glGetString(GL_VERSION));
-        logger->LogInfo("GLSL Version: {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
+        // reinterpret_cast<const char*> to get rid of fmt warning
+        logger->LogInfo("Vendor: {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+        logger->LogInfo("Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+        logger->LogInfo("Version: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+        logger->LogInfo("GLSL Version: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 #endif // ENGINE_DEBUG
         glEnable(GL_DEPTH_TEST);
         initialized = true;

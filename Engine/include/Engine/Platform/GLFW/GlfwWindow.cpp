@@ -11,7 +11,6 @@ namespace Eng
 	GlfwWindow::GlfwWindow() : Window()
 	{
 		logger = Eng::Logger::GetLogger();
-		auto handle = GetHandle();
 	}
 
 	GlfwWindow::~GlfwWindow()
