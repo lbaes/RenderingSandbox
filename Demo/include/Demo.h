@@ -23,10 +23,9 @@ public:
 	// Model position
 	Vec3 model_pos = Vec3{0.0, 0.0, 0.0};
 	Vec3 model_scale = Vec3{1.0, 1.0, 1.0};
-	Vec3 model_rotation = Vec3{0.0f, 1.0f, 0.0f};
-	float rotation_angle = 0.0f;
+	Vec3 model_rotation = Vec3{1.0f, 0.0f, 0.0f};
+	float rotation_angle = 90.0f;
 	Transform t;
-
 
 	// Camera settings
 	Camera camera;
@@ -51,7 +50,7 @@ public:
 
         // Load model
 		Model model;
-		model.LoadFromFile("resources/backpack/backpack.obj");
+		model.LoadFromFile("resources/backpack/backpack.gltf");
 		model_handle = renderDevice->CreateModel(model);
 
         // Grid
