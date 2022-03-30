@@ -15,7 +15,7 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 inverse_model;
-uniform mat4 view_pos;
+uniform vec3 view_pos;
 
 void main()
 {
@@ -23,4 +23,5 @@ void main()
     TexCoords = aTexCoords;
     Normal = mat3(transpose(inverse_model)) * aNormal;
     FragPos = vec3(model * vec4(aPos, 1.0));
+    ViewPos = view_pos;
 }

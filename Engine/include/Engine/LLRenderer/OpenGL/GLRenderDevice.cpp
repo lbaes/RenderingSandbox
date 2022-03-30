@@ -38,7 +38,9 @@ namespace Eng {
         logger->LogInfo("GLSL Version: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 #endif // ENGINE_DEBUG
         glEnable(GL_DEPTH_TEST);
-        initialized = true;
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		initialized = true;
     }
 
     /// <summary>

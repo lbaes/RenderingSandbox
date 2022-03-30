@@ -42,7 +42,8 @@
                 },
                 "metallicRoughnessTexture" : {
                     "index" : 2
-                }
+                },
+                "roughnessFactor" : 0.5
             }
         }
     ],
@@ -89,8 +90,8 @@
         },
         {
             "mimeType" : "image/png",
-            "name" : "1001_metallic-1001_roughness",
-            "uri" : "1001_metallic-1001_roughness.png"
+            "name" : "1001_metallic",
+            "uri" : "1001_metallic.png"
         }
     ],
     "accessors" : [

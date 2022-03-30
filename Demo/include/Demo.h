@@ -51,6 +51,7 @@ public:
         // Load model
 		Model model;
 		model.LoadFromFile("resources/backpack/backpack.gltf");
+		//model.LoadFromFile("resources/cube/container.gltf");
 		model_handle = renderDevice->CreateModel(model);
 
         // Grid
@@ -66,7 +67,7 @@ public:
         line_handle2 = renderDevice->CreateLine(line2);
 
         // Lights
-        Vec3 light_pos = {5.0f, 10.0f, 5.0f};
+        Vec3 light_pos = {0.0f, 5.0f, 5.0f};
         model_shader_handle.use();
         model_shader_handle.uniform_set("light.position", light_pos);
         model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
