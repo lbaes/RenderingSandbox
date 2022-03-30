@@ -33,18 +33,22 @@ void main()
 
     // Lighting
     vec3 normal = normalize(Normal);
-    vec3 view_direction = normalize(ViewPos - FragPos);
     vec3 light_direction = normalize(light.position - FragPos);
+    vec3 view_direction = normalize(ViewPos - FragPos);
     vec3 reflection_direction = reflect(-light_direction, normal);
+
+    // Diffuse
     float diffuse_multiplier = max(dot(normal, light_direction), 0.0);
+    vec3 diffuse = diffuse_multiplier * light.diffuse * DiffuseTex.rgb;
+
+    // Specular
     float spec_multiplier = pow(max(dot(view_direction, reflection_direction), 0.0), 32);
+    vec3 specular = light.specular * spec_multiplier * SpecularTex.bbb;
 
     // Final colors
-    vec3 diffuse = diffuse_multiplier * light.diffuse * vec3(texture(material.diffuse1, TexCoords));
-    vec3 ambient = light.ambient * vec3(texture(material.diffuse1, TexCoords));
-    vec3 specular = light.specular * spec_multiplier * vec3(texture(material.specular1, TexCoords));
+    vec3 ambient = light.ambient * DiffuseTex.rgb;
 
     // Result
-    vec3 result = diffuse + ambient + specular;
+    vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
 }

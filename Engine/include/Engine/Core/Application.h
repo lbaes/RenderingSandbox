@@ -27,12 +27,6 @@ namespace Eng
 		virtual void OnUpdate(){};
 		virtual void Draw(){};
 
-//		GPUShaderHandle CreateShaderProgram(const Shader& shader);
-//		GPUModelHandle CreateModel(const Model& model);
-//		void RenderModel(const GPUModelHandle& gpuModelHandle);
-//
-//		int GetWindowHeight() const;
-//		int GetWindowWidth() const;
 		Window* window;
 		Input* input;
 		std::unique_ptr<RenderDevice> renderDevice;

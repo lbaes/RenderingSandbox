@@ -1,8 +1,4 @@
 #include "GlfwWindow.h"
-#ifdef ENG_WINDOWS
-#include "Engine/Platform/GLFW/GlfwWindow.h"
-#include "Engine/Platform/GLFW/GlfwInput.h"
-#endif
 
 namespace Eng
 {

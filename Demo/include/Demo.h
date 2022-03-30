@@ -69,9 +69,9 @@ public:
         Vec3 light_pos = {5.0f, 10.0f, 5.0f};
         model_shader_handle.use();
         model_shader_handle.uniform_set("light.position", light_pos);
-        model_shader_handle.uniform_set("light.diffuse", Vec3{1.0, 1.0, 1.0});
-        model_shader_handle.uniform_set("light.ambient", Vec3{0.1, 0.1, 0.1});
-        model_shader_handle.uniform_set("light.specular", Vec3{0.0, 0.0, 0.0});
+        model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
+        model_shader_handle.uniform_set("light.ambient", Vec3{0.2, 0.2, 0.2});
+        model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
 
 		renderer->SetCamera(camera);
 

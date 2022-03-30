@@ -23,7 +23,7 @@ _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 namespace Eng {
     Application::Application() : window{nullptr}, input{nullptr}, isRunning{false} {
         window = GetWindow();
-        window->CreateWindow("Application", 800, 400);
+        window->CreateWindow("Application", 1280, 720);
         input = GetInput();
         renderDevice = std::make_unique<RenderDevice>();
         renderer = std::make_unique<GLRenderer>();

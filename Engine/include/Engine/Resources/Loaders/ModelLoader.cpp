@@ -94,7 +94,7 @@ namespace Eng {
         {
             aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
             LoadTexture(mat, aiTextureType_DIFFUSE, Texture2DUsage::DIFFUSE, file_directory, textures);
-            LoadTexture(mat, aiTextureType_SPECULAR, Texture2DUsage::SPECULAR, file_directory, textures);
+            LoadTexture(mat, aiTextureType_METALNESS, Texture2DUsage::SPECULAR, file_directory, textures);
             LoadTexture(mat, aiTextureType_HEIGHT, Texture2DUsage::HEIGHT, file_directory, textures);
             LoadTexture(mat, aiTextureType_AMBIENT, Texture2DUsage::AMBIENT, file_directory, textures);
         }
