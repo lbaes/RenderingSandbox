@@ -49,7 +49,6 @@ namespace Eng {
         std::vector<unsigned int> indices;
         std::vector<Texture2DMeshHandle> textures;
 
-        // Normals
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
