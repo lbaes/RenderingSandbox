@@ -18,7 +18,7 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
     unsigned int specularNr = 1;
     unsigned int normalNr   = 1;
     unsigned int heightNr   = 1;
-    for (int i = 0; i < mesh.textures.size(); i++) {
+    for (size_t i = 0; i < mesh.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         std::string number;
         auto usage = mesh.textures[i].usage;
@@ -40,7 +40,7 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
             number = std::to_string(heightNr++);
         }
         const auto uniform_name = "material." + (name + number);
-        _shader.uniform_set(uniform_name, i);
+        _shader.uniform_set(uniform_name, (int)i);
         glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
     }
     glBindVertexArray(mesh.VAO);
