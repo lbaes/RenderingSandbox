@@ -86,8 +86,8 @@ public:
 
 		t = {model_pos, model_scale, model_rotation, rotation_angle};
 
-		camZ = cos(current / 1000) * 8.0;
-		camX = sin(current / 1000) * 8.0;
+		camZ = cos(current / 1000.0f) * 8.0;
+		camX = sin(current / 1000.0f) * 8.0;
 
 		if (input->IsKeyDown(Keys::DOWN))
 			camY--;

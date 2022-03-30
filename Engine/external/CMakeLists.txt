@@ -1,6 +1,6 @@
 # GLAD
 add_library(glad STATIC glad/src/glad.c)
-target_include_directories(glad PUBLIC ./glad/include/ )
+target_include_directories(glad SYSTEM PUBLIC ./glad/include/ )
 
 
 # GLFW
@@ -82,13 +82,14 @@ target_compile_options(assimp PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/Wv:18>) # disab
 
 # GLM
 add_subdirectory(glm INTERFACE)
-target_include_directories(glm INTERFACE ./glm/)
+target_include_directories(glm SYSTEM INTERFACE ./glm/)
+target_compile_definitions(glm INTERFACE GLM_FORCE_SILENT_WARNINGS)
 
 # IMGUI
 file(GLOB IMGUI_SOURCES imgui/*.cpp)
 file(GLOB IMGUI_HEADERS imgui/*.h)
 add_library(imgui STATIC ${IMGUI_HEADERS} ${IMGUI_SOURCES} ./imgui/backends/imgui_impl_glfw.cpp ./imgui/backends/imgui_impl_opengl3.cpp)
-target_include_directories(imgui PUBLIC ./imgui/ ./imgui/backends/)
+target_include_directories(imgui SYSTEM PUBLIC ./imgui/ ./imgui/backends/)
 target_link_libraries(imgui PUBLIC glfw glad)
 
 # spdLog
@@ -96,8 +97,8 @@ add_subdirectory(spdlog)
 
 # STB image
 add_library(stb INTERFACE)
-target_include_directories(stb INTERFACE ./stb/)
+target_include_directories(stb SYSTEM INTERFACE ./stb/)
 
 # Murmur Hash
 add_library(murmurhash STATIC murmurhash/MurmurHash3.h murmurhash/MurmurHash3.cpp )
-target_include_directories(murmurhash PUBLIC ./murmurhash/)
+target_include_directories(murmurhash SYSTEM PUBLIC ./murmurhash/)

@@ -52,7 +52,7 @@ namespace Eng
 					else return;
 				}
 			}
-			catch (const std::out_of_range& ex) {
+			catch (const std::out_of_range&) {
 				logger->LogWarning("no callbacks registered for: {}", typeid(event).name());
 			}
 		}

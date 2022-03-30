@@ -12,5 +12,6 @@ namespace Eng
         virtual void RenderLine(const GPULineHandle& line) = 0;
 		virtual void SetShader(GPUShaderHandle shader) = 0;
 		virtual void SetCamera(const Camera& camera) = 0;
+        virtual ~Renderer() = default;
 	};
 }
