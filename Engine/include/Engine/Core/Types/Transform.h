@@ -18,7 +18,7 @@ namespace Eng {
     inline Transform::Transform(const Vec3 &translateVec, const Vec3 &scaleVec, const Vec3 &rotationVec, float rotationAngle) {
         transform_matrix = glm::mat4(1.0f);
         transform_matrix = glm::translate(transform_matrix, translateVec);
-        transform_matrix = glm::rotate(transform_matrix, rotationAngle, rotationVec);
+        transform_matrix = glm::rotate(transform_matrix, glm::radians(rotationAngle), rotationVec);
         transform_matrix = glm::scale(transform_matrix, scaleVec);
     }
 
