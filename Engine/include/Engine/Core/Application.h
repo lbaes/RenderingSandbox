@@ -7,6 +7,7 @@
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Input.h"
 #include "Engine/Core/Logger.h"
+#include "Engine/Core/Types/Color.h"
 #include "Engine/LLRenderer/RenderDevice.h"
 #include "Engine/LLRenderer/Renderer.h"
 

@@ -24,11 +24,11 @@ namespace Eng {
 	class RenderDevice {
 	public:
 		void InitRenderDevice();
-        GPUTextureHandle CreateTexture2D(const Texture2D& tex);
-        GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
-        GPUMeshHandle CreateMesh(const Mesh& mesh);
+		GPUTextureHandle CreateTexture2D(const Texture2D& tex);
+		GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
+		GPUMeshHandle CreateMesh(const Mesh& mesh);
 		GPUModelHandle CreateModel(const Model& model);
-        GPULineHandle CreateLine(const Line& line);
+		GPULineHandle CreateLine(const Line& line);
 	private:
 		bool initialized = false;
         std::unordered_map<std::string, GPUTextureHandle> loaded_textures;

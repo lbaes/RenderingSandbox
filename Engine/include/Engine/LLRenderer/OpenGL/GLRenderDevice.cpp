@@ -217,7 +217,8 @@ namespace Eng {
         return lineHandle;
     }
 
-    constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage) {
+
+	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage) {
         switch (usage)
         {
             case Eng::VERTEX_BUFFER_USAGE::DYNAMIC:

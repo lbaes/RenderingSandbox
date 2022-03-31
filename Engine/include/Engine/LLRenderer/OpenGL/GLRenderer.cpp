@@ -49,12 +49,12 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
     glActiveTexture(GL_TEXTURE0);
 }
 
-void Eng::GLRenderer::RenderLine(const GPULineHandle &line) {
+void Eng::GLRenderer::RenderLine(const GPULineHandle &line, Color4 color) {
     _shader.use();
     _shader.uniform_set("model", Transform().GetTransformation());
     _shader.uniform_set("view", _camera.GetView());
     _shader.uniform_set("projection", _camera.GetProjection());
-    _shader.uniform_set("color", {1.0f, 1.0f, 1.0f, 1.0f});
+    _shader.uniform_set("color", {color.red(), color.green(), color.blue(), color.alpha()});
     glBindVertexArray(line.VAO);
     glDrawArrays(GL_LINES, 0, 2);
     glBindVertexArray(0);
@@ -66,4 +66,13 @@ void Eng::GLRenderer::SetShader(GPUShaderHandle shader) {
 
 void Eng::GLRenderer::SetCamera(const Eng::Camera &camera) {
     _camera = camera;
+}
+
+void Eng::GLRenderer::SetClearColor(Eng::Color4 color){
+	_clearColor = color;
+	glClearColor(color.red(), color.green(), color.blue(), color.alpha());
+}
+
+void Eng::GLRenderer::Clear(){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

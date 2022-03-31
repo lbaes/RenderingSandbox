@@ -34,6 +34,10 @@ public:
 	float camY = 1.0f;
 	float aspectRatio;
 
+	// Grid settings
+	bool wasPressed = false;
+	bool drawGrid = false;
+
 	void OnStart() override {
 		std::cout << "Demo Start\n";
 		aspectRatio = (float) window->GetPixelWidth() / (float) window->GetPixelHeight();
@@ -74,7 +78,9 @@ public:
         model_shader_handle.uniform_set("light.ambient", Vec3{0.2, 0.2, 0.2});
         model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
 
+		// Renderer config
 		renderer->SetCamera(camera);
+		renderer->SetClearColor(Color4{0.0f, 0.0f, 0.0f, 1.0f});
 
 		// Start timer;
 		simulation_timer.Start();
@@ -90,6 +96,10 @@ public:
 		camZ = cos(current / 1000.0f) * 8.0;
 		camX = sin(current / 1000.0f) * 8.0;
 
+		if (input->KeyDown(Keys::SPACE)){
+			drawGrid = !drawGrid;
+		}
+
 		if (input->IsKeyDown(Keys::DOWN))
 			camY--;
 		else if (input->IsKeyDown(Keys::UP))
@@ -99,24 +109,28 @@ public:
 		Vec3 cameraPos = Vec3{camX, camY, camZ};
 
 		// Setup Camera
-		camera.SetCameraPos({cameraPos, model_pos, cameraUp, -90.0f, 0.0f});
-		camera.SetProjection(45, aspectRatio);
+		camera.UpdateCamera(cameraPos, model_pos, cameraUp);
+		camera.UpdateProjection(45, aspectRatio);
 		renderer->SetCamera(camera);
 	}
 
 	void Draw() override
 	{
 		// Render stuff
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderer->Clear();
 
         // draw model
         renderer->SetShader(model_shader_handle);
 		renderer->RenderModel(model_handle, t);
 
-        // draw lines
-        renderer->SetShader(line_shader_handle);
-        renderer->RenderLine(line_handle);
-        renderer->RenderLine(line_handle2);
+        // draw line
+		if (drawGrid)
+		{
+			Color4 line_color{ 1.0, 1.0, 1.0, 1.0 };
+			renderer->SetShader(line_shader_handle);
+			renderer->RenderLine(line_handle, line_color);
+			renderer->RenderLine(line_handle2, line_color);
+		}
 	}
 };
 

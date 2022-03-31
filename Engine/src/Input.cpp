@@ -8,22 +8,22 @@ namespace Eng {
 		logger = Logger::GetLogger();
 	}
 
-	bool Input::IsKeyDown(Keys key)
+	bool Input::IsKeyDown(Keys key) const
 	{
 		return key_pressed[KeyToCode(key)] == KeyState::PRESSED || key_pressed[KeyToCode(key)] == KeyState::REPEAT;
 	}
 
-	bool Input::IsKeyUp(Keys key)
+	bool Input::IsKeyUp(Keys key) const
 	{
 		return !IsKeyDown(key);
 	}
 
-	bool Input::IsMousePressed(MouseButton btn)
+	bool Input::IsMousePressed(MouseButton btn) const
 	{
 		return mouse_button_pressed[KeyToCode(btn)] == KeyState::PRESSED;
 	}
 
-	bool Input::IsMouseReleased(MouseButton btn)
+	bool Input::IsMouseReleased(MouseButton btn) const
 	{
 		return !IsMousePressed(btn);
 	}
@@ -76,6 +76,25 @@ namespace Eng {
 		e.isHandled = false;
 		e.x_offset = xPos;
 		e.y_offset = yPos;
+	}
+
+	bool Input::KeyDown(Keys key)
+	{
+		bool wasPressed = prev_key_pressed[KeyToCode(key)] == KeyState::PRESSED || prev_key_pressed[KeyToCode(key)] == KeyState::REPEAT;
+		prev_key_pressed[KeyToCode(key)] = key_pressed[KeyToCode(key)];
+		return !wasPressed && IsKeyDown(key);
+	}
+
+	bool Input::MousePressed(MouseButton btn)
+	{
+		bool wasPressed = prev_mouse_button_pressed[KeyToCode(btn)] == KeyState::PRESSED || prev_mouse_button_pressed[KeyToCode(btn)] == KeyState::REPEAT;
+		prev_mouse_button_pressed[KeyToCode(btn)] = mouse_button_pressed[KeyToCode(btn)];
+		return !wasPressed && IsMousePressed(btn);
+	}
+
+	void Input::CopyStates()
+	{
+
 	}
 
 }

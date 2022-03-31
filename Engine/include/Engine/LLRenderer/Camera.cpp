@@ -1,23 +1,27 @@
 #include "Engine/LLRenderer/Camera.h"
 #include "glm/gtx/transform.hpp"
 
-void Eng::Camera::SetProjection(Eng::Mat4 projection)
+Eng::Camera::Camera() = default;
+
+Eng::Camera::Camera(Eng::Vec3 cameraPos, Eng::Vec3 cameraTarget, Eng::Vec3 cameraUp, float fov, float aspectRatio,
+		float zNear, float zFar)
+		: _camera_pos{ cameraTarget }, _camera_target{ cameraTarget }, _camera_up{ cameraUp }
 {
-	_projection = projection;
+	_view = glm::lookAt(_camera_pos, _camera_target, _camera_up);
+	_projection = glm::perspective(glm::radians(fov), aspectRatio, zNear, zFar);
 }
 
-Eng::Camera::Camera(Eng::Mat4 view, Eng::Mat4 projection, float fov, float aspect_ratio)
-		: _view{view}, _projection{projection}, _fov(fov), _aspect_ratio(aspect_ratio) {}
-
-void Eng::Camera::SetCameraPos(Eng::CameraPos cameraPos)
+void Eng::Camera::UpdateCamera(Eng::Vec3 cameraPos, Eng::Vec3 cameraTarget, Eng::Vec3 cameraUp)
 {
-	_pos = cameraPos;
-	update_view_matrix();
+	_camera_pos = cameraPos;
+	_camera_target = cameraTarget;
+	_camera_up = cameraUp;
+	_view = glm::lookAt(_camera_pos, _camera_target, _camera_up);
 }
 
-void Eng::Camera::SetProjection(float fovDegrees, float aspectRatio)
+void Eng::Camera::UpdateProjection(float fov, float aspectRatio, float zNear, float zFar)
 {
-	update_projection_matrix(fovDegrees, aspectRatio);
+	_projection = glm::perspective(glm::radians(fov), aspectRatio, zNear, zFar);
 }
 
 Eng::Mat4 Eng::Camera::GetView() const
@@ -30,20 +34,19 @@ Eng::Mat4 Eng::Camera::GetProjection() const
 	return _projection;
 }
 
-void Eng::Camera::update_view_matrix()
-{
-	_view = glm::lookAt(_pos.camera_pos, _pos.camera_target, _pos.camera_up);
-}
-
-void Eng::Camera::update_projection_matrix(float fovDegrees, float aspectRatio)
-{
-	_fov = fovDegrees;
-	_aspect_ratio = aspectRatio;
-	_projection = glm::perspective(glm::radians(fovDegrees), aspectRatio, 0.1f, 10000.0f);
-}
-
 Eng::Vec3 Eng::Camera::GetPosition() const
 {
-	return _pos.camera_pos;
+	return _camera_pos;
 }
+
+Eng::Vec3 Eng::Camera::GetTarget() const
+{
+	return _camera_target;
+}
+
+Eng::Vec3 Eng::Camera::GetUp() const
+{
+	return _camera_up;
+}
+
 
