@@ -18,6 +18,5 @@ namespace Eng {
 	private:
         GPUShaderHandle _shader;
         Camera _camera;
-		Color4 _clearColor;
     };
 }

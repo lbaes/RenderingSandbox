@@ -1,4 +1,5 @@
 #version 450 core
+#define BLINNPHONG
 out vec4 FragColor;
 
 in vec2 TexCoords;
@@ -36,13 +37,19 @@ void main()
     vec3 light_direction = normalize(light.position - FragPos);
     vec3 view_direction = normalize(ViewPos - FragPos);
     vec3 reflection_direction = reflect(-light_direction, normal);
+    vec3 halfway_direction = normalize(light_direction + view_direction);
 
     // Diffuse
     float diffuse_multiplier = max(dot(normal, light_direction), 0.0);
     vec3 diffuse = diffuse_multiplier * light.diffuse * DiffuseTex.rgb;
 
     // Specular
-    float spec_multiplier = pow(max(dot(view_direction, reflection_direction), 0.0), 32);
+    #ifdef PHONG
+        float spec_multiplier = pow(max(dot(view_direction, reflection_direction), 0.0), 32);
+    #endif
+    #ifdef BLINNPHONG
+        float spec_multiplier = pow(max(dot(normal, halfway_direction), 0.0), 16);
+    #endif
     vec3 specular = light.specular * spec_multiplier * SpecularTex.bbb;
 
     // Final colors

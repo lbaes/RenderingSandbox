@@ -14,7 +14,8 @@ namespace Eng {
 		Vec3 GetPosition() const;
 		Vec3 GetTarget() const;
 		Vec3 GetUp() const;
-	private:
+
+	protected:
 		Vec3 _camera_pos{};
 		Vec3 _camera_target{};
 		Vec3 _camera_up{};

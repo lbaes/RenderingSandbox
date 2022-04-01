@@ -1,12 +1,12 @@
 #pragma once
 #include "RenderDevice.h"
-#include "Camera.h"
 #include "Engine/Core/Types/Transform.h"
 #include "Engine/Core/Types/Transform.h"
 #include "Engine/Core/Types/Color.h"
 
 namespace Eng
 {
+	class Camera;
 	class Renderer
 	{
 	public:

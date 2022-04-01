@@ -69,7 +69,6 @@ void Eng::GLRenderer::SetCamera(const Eng::Camera &camera) {
 }
 
 void Eng::GLRenderer::SetClearColor(Eng::Color4 color){
-	_clearColor = color;
 	glClearColor(color.red(), color.green(), color.blue(), color.alpha());
 }
 
