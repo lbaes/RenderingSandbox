@@ -22,6 +22,9 @@ namespace Eng
 			throw std::runtime_error("GLFW failed to initialize");
 		}
 
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);

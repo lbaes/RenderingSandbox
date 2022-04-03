@@ -37,16 +37,16 @@ namespace Eng {
 		e.key = key;
 		e.mods = Modifiers::NONE;
 		e.state = state;
-		if (state == KeyState::PRESSED) {
-			logger->LogTrace("Key press");
-		}
-		else if (state == KeyState::RELEASED)
-		{
-			logger->LogTrace("Key release");
-		}
-		else {
-			logger->LogTrace("Key repeat");
-		}
+//		if (state == KeyState::PRESSED) {
+//			logger->LogTrace("Key press");
+//		}
+//		else if (state == KeyState::RELEASED)
+//		{
+//			logger->LogTrace("Key release");
+//		}
+//		else {
+//			logger->LogTrace("Key repeat");
+//		}
 	}
 
 	void Input::UpdateMouseButtonState(MouseButton btn, KeyState state) {

@@ -5,11 +5,13 @@
     #include "OpenGL/GLMesh.h"
     #include "OpenGL/GLModel.h"
     #include "OpenGL/GLLine.h"
+	#include "OpenGL/GLFramebuffer.h"
     using GPUTextureHandle = Eng::ogl::GLTexture;
     using GPUShaderHandle = Eng::ogl::GLShader;
     using GPUMeshHandle = Eng::ogl::GLMesh;
     using GPUModelHandle = Eng::ogl::GLModel;
     using GPULineHandle = Eng::ogl::GLLine;
+	using GPUFramebuffer = Eng::ogl::GLFramebuffer;
 #endif
 #include <unordered_map>
 #include <string>
@@ -24,7 +26,7 @@ namespace Eng {
 	class RenderDevice {
 	public:
 		void InitRenderDevice();
-		GPUTextureHandle CreateTexture2D(const Texture2D& tex);
+		GPUTextureHandle CreateTexture2D(const Texture2D& tex, Texture2DUsage usage = Texture2DUsage::DIFFUSE);
 		GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
 		GPUMeshHandle CreateMesh(const Mesh& mesh);
 		GPUModelHandle CreateModel(const Model& model);

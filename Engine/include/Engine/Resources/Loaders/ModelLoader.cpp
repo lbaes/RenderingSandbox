@@ -17,7 +17,7 @@ namespace Eng {
     void ModelLoader::LoadModel(const std::string& path, Model& model )
 	{
         Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate);
+        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals  );
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
@@ -77,7 +77,21 @@ namespace Eng {
             else {
                 vertex.texture_coordinate = Vec2{ 0.0, 0.0 };
             }
-            
+
+			// tangent and bitangent
+			if (mesh->HasTangentsAndBitangents()){
+				Vec3 tangent, bitangent;
+				tangent.x = mesh->mTangents[i].x;
+				tangent.y = mesh->mTangents[i].y;
+				tangent.z = mesh->mTangents[i].z;
+				vertex.tangent = tangent;
+
+				bitangent.x = mesh->mBitangents[i].x;
+				bitangent.y = mesh->mBitangents[i].y;
+				bitangent.z = mesh->mBitangents[i].z;
+				vertex.bitangent = bitangent;
+			}
+
             vertices.push_back(vertex);
         }
         
@@ -95,8 +109,7 @@ namespace Eng {
             aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
             LoadTexture(mat, aiTextureType_DIFFUSE, Texture2DUsage::DIFFUSE, file_directory, textures);
             LoadTexture(mat, aiTextureType_METALNESS, Texture2DUsage::SPECULAR, file_directory, textures);
-            LoadTexture(mat, aiTextureType_HEIGHT, Texture2DUsage::HEIGHT, file_directory, textures);
-            LoadTexture(mat, aiTextureType_AMBIENT, Texture2DUsage::AMBIENT, file_directory, textures);
+            LoadTexture(mat, aiTextureType_NORMALS, Texture2DUsage::NORMAL, file_directory, textures);
         }
 
         return Mesh{ std::move(vertices), std::move(indices), std::move(textures) };

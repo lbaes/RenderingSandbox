@@ -17,8 +17,7 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
     unsigned int diffuseNr  = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr   = 1;
-    unsigned int heightNr   = 1;
-    for (size_t i = 0; i < mesh.textures.size(); i++) {
+    for (unsigned int i = 0; i < mesh.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         std::string number;
         auto usage = mesh.textures[i].usage;
@@ -34,10 +33,6 @@ void Eng::GLRenderer::RenderMesh(const GPUMeshHandle& mesh) {
         else if(usage == Texture2DUsage::NORMAL) {
             name = "normal";
             number = std::to_string(normalNr++);
-        }
-        else if(usage == Texture2DUsage::HEIGHT) {
-            name = "height";
-            number = std::to_string(heightNr++);
         }
         const auto uniform_name = "material." + (name + number);
         _shader.uniform_set(uniform_name, (int)i);

@@ -12,7 +12,7 @@ using namespace Eng;
 class Demo : public Eng::Application {
 public:
 	// GPU handles
-	GPUShaderHandle model_shader_handle, line_shader_handle;
+	GPUShaderHandle model_shader_handle, line_shader_handle, simple_model_shader_handle;
 	GPUModelHandle backpack_handle, container_handle;
     GPULineHandle lineX_handle, lineY_handle, lineZ_handle;
 
@@ -29,7 +29,7 @@ public:
 
 	// Camera settings
 	ArcBallCamera camera;
-	float camZ = 10.0f;
+	float camZ = 5.0f;
 	float camX = 0.0f;
 	float camY = 1.0f;
 	float angleX = 0.0f;
@@ -38,7 +38,7 @@ public:
 	float last_angleY = 0.0f;
 	float last_mouseX = 0.0f;
 	float last_mouseY = 0.0f;
-	float aspectRatio;
+	float aspectRatio = 1.0f;
 
 	// Grid settings
 	bool drawGrid = false;
@@ -48,13 +48,22 @@ public:
 		aspectRatio = (float) window->GetPixelWidth() / (float) window->GetPixelHeight();
 
 		// Load shaders
-		Shader vShaderModel = Eng::Shader::LoadFromDisk("resources/vModel.glsl");
-		Shader fShaderModel = Eng::Shader::LoadFromDisk("resources/fModel.glsl");
+		Shader vShaderModel, fShaderModel, vShaderLine, fShaderLine;
+		unsigned int effects = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::NORMAL_MAP | ShaderEffects::SPECULAR_MAP;
+		unsigned int effects_simple = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::SPECULAR_MAP;
 
-        Shader vShaderLine = Shader::LoadFromDisk("resources/vLine.glsl");
-        Shader fShaderLine = Shader::LoadFromDisk("resources/fLine.glsl");
+		vShaderModel.LoadFromDisk("resources/vUberShader.glsl");
+		fShaderModel.LoadFromDisk("resources/fUberShader.glsl");
 
+        vShaderLine.LoadFromDisk("resources/vLine.glsl");
+        fShaderLine.LoadFromDisk("resources/fLine.glsl");
+
+		vShaderModel.ConfigureEffects(effects);
+		fShaderModel.ConfigureEffects(effects);
         model_shader_handle = renderDevice->CreateShaderProgram(vShaderModel, fShaderModel);
+
+		fShaderModel.ConfigureEffects(effects_simple);
+        simple_model_shader_handle = renderDevice->CreateShaderProgram(vShaderModel, fShaderModel);
         line_shader_handle = renderDevice->CreateShaderProgram(vShaderLine, fShaderLine);
 
         // Load model
@@ -82,12 +91,18 @@ public:
 		lineY_handle = renderDevice->CreateLine(lineY);
 
         // Lights
-        Vec3 light_pos = {0.0f, 5.0f, 5.0f};
+        Vec3 light_pos = {0.0f, 3.0f, 3.0f};
         model_shader_handle.use();
         model_shader_handle.uniform_set("light.position", light_pos);
         model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
-        model_shader_handle.uniform_set("light.ambient", Vec3{0.2, 0.2, 0.2});
+        model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
         model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
+
+		simple_model_shader_handle.use();
+		simple_model_shader_handle.uniform_set("light.position", light_pos);
+		simple_model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
+		simple_model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
+		simple_model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
 
 		// Renderer config
 		renderer->SetCamera(camera);
@@ -106,7 +121,10 @@ public:
 	void OnUpdate() override {
 		using namespace Eng;
 		current = simulation_timer.GetTime();
-		aspectRatio = (float) window->GetPixelWidth() / (float) window->GetPixelHeight();
+		auto width = (float) window->GetPixelWidth();
+		auto height = (float) window->GetPixelHeight();
+		if (width != 0 && height != 0)
+			aspectRatio = (float) window->GetPixelWidth() / (float) window->GetPixelHeight();
 
 		t = {model_pos, model_scale, model_rotation, rotation_angle};
 		t2 = {model_pos + Vec3{0.0f, -7.0f, 0.0f}, Vec3{1.0f, 1.0f, 1.0f}, model_rotation, 0.0f};
@@ -154,6 +172,7 @@ public:
         // draw model
         renderer->SetShader(model_shader_handle);
 		renderer->RenderModel(backpack_handle, t);
+		renderer->SetShader(simple_model_shader_handle);
 		renderer->RenderModel(container_handle, t2);
 
         // draw line

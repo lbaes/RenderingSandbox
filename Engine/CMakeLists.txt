@@ -87,7 +87,7 @@ add_library(Engine STATIC
         "include/Engine/Utility/ReadFile.h"    
         "include/Engine/Utility/ReadFile.cpp"        
         "include/Engine/Utility/TypeString.h"
-        include/Engine/Core/Types/Line.h include/Engine/LLRenderer/OpenGL/GLLine.h include/Engine/LLRenderer/ArcBallCamera.cpp include/Engine/LLRenderer/ArcBallCamera.h)
+        include/Engine/Core/Types/Line.h include/Engine/LLRenderer/OpenGL/GLLine.h include/Engine/LLRenderer/ArcBallCamera.cpp include/Engine/LLRenderer/ArcBallCamera.h include/Engine/LLRenderer/Framebuffer.h include/Engine/LLRenderer/OpenGL/GLFramebuffer.cpp include/Engine/LLRenderer/OpenGL/GLFramebuffer.h)
 target_compile_features(Engine PUBLIC cxx_std_20)
 target_include_directories(Engine PUBLIC "include/")
 target_compile_definitions(Engine PRIVATE "$<$<CONFIG:Debug>:ENGINE_DEBUG>")
