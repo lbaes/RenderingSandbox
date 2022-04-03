@@ -17,9 +17,8 @@ namespace Eng {
 
 	void GlfwInput::Update()
 	{
-		// Triggers all registered callbacks;
+		// triggers all registered callbacks;
 		glfwPollEvents();
-		CopyStates();
 	}
 
 	void GlfwInput::cursor_position_callback(GLFWwindow*, double xpos, double ypos)

@@ -28,7 +28,7 @@ namespace Eng {
         renderDevice = std::make_unique<RenderDevice>();
         renderer = std::make_unique<GLRenderer>();
         logger = Logger::GetLogger();
-    };
+    }
 
     Application::~Application() {
     }
@@ -36,13 +36,22 @@ namespace Eng {
     int Application::Start() {
         renderDevice->InitRenderDevice();
         isRunning = true;
-
+        uint64_t frame_count = 0;
+        Timer t;
 		OnStart();
+        t.Start();
         while (window->IsOpen()) {
-			input->Update();
+            input->Update();
             OnUpdate();
 			Draw();
             window->Update();
+            frame_count++;
+            if (t.GetTime() > 1000){
+                window->SetTitle(std::to_string(frame_count));
+                frame_count = 0;
+                t.Stop();
+                t.Start();
+            }
         }
         return 0;
     }

@@ -17,7 +17,7 @@ namespace Eng {
     void ModelLoader::LoadModel(const std::string& path, Model& model )
 	{
         Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals  );
+        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace );
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
@@ -90,7 +90,10 @@ namespace Eng {
 				bitangent.y = mesh->mBitangents[i].y;
 				bitangent.z = mesh->mBitangents[i].z;
 				vertex.bitangent = bitangent;
-			}
+			}else {
+                //vertex.tangent = Vec3 {0.0f, 0.0f, 1.0f};
+                //vertex.bitangent = Vec3 {0.0f, 0.0f, 1.0f};
+            }
 
             vertices.push_back(vertex);
         }

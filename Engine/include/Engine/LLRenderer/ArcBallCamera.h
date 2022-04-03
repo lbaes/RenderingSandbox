@@ -6,10 +6,7 @@ namespace Eng
 	class ArcBallCamera : public Camera
 	{
 	public:
-		void UpdateCameraPosByAngle(float angleX, float angleY);
-	private:
-		float last_angleX;
-		float last_angleY;
+		void UpdateCameraView(float angleX, float angleY);
 	};
 }
 

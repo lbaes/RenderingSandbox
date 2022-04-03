@@ -1,13 +1,13 @@
 #include <Engine/Platform/Timer.h>
 
-#ifdef ENG_WINDOWS
+#if defined(ENG_WINDOWS) || defined(ENG_LINUX)
 #include <GLFW/glfw3.h>
 #endif
 
 namespace Eng {
 
-#ifdef ENG_WINDOWS
-	double TimeMillis() {
+#if defined(ENG_WINDOWS) || defined(ENG_LINUX)
+    double TimeMillis() {
 		return glfwGetTime() * 1000.0;
 	}
 #endif

@@ -3,6 +3,7 @@
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Keys.h"
 #include "Engine/Core/Logger.h"
+#include "Engine/Core/Types/Vec2.h"
 #include <array>
 
 namespace Eng {
@@ -16,6 +17,9 @@ namespace Eng {
 		bool IsKeyUp(Keys key) const;
 		bool IsMousePressed(MouseButton btn) const;
 		bool IsMouseReleased(MouseButton btn) const;
+        float GetMouseY() const;
+        float GetMouseX() const;
+        Vec2 GetMousePos() const;
 
 		// changed since last update
 		bool KeyDown(Keys key);
@@ -25,7 +29,6 @@ namespace Eng {
 		void UpdateMouseButtonState(MouseButton btn, KeyState state);
 		void UpdateMousePosition(double xPos, double yPos);
 		void UpdateMouseScroll(double xPos, double yPos);
-		void CopyStates();
 	private:
 		std::array<KeyState, static_cast<int> (Keys::LAST)> key_pressed{KeyState::RELEASED};
 		std::array<KeyState, static_cast<int> (MouseButton::LAST)> mouse_button_pressed{ KeyState::RELEASED };

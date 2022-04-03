@@ -92,9 +92,17 @@ namespace Eng {
 		return !wasPressed && IsMousePressed(btn);
 	}
 
-	void Input::CopyStates()
-	{
 
-	}
+    float Input::GetMouseY() const {
+        return (float)mouseY;
+    }
+
+    float Input::GetMouseX() const {
+        return (float)mouseX;
+    }
+
+    Vec2 Input::GetMousePos() const {
+        return Vec2 {mouseX, mouseY};
+    }
 
 }

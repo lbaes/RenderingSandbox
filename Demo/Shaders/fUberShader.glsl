@@ -5,7 +5,9 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 in vec3 ViewPos;
+#if defined(USE_NORMAL_MAP)
 in mat3 TBN;
+#endif
 
 struct Material {
     sampler2D diffuse1;
@@ -19,6 +21,9 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 uniform Material material;
@@ -29,8 +34,9 @@ void main()
     // Lighting
 
     #if defined(USE_NORMAL_MAP)
-    vec4 NormalTex = texture(material.normal1, TexCoords);
-    vec3 normal = normalize(TBN * normalize(NormalTex.rgb * 2.0 - 1.0));
+    vec3 NormalTex = texture(material.normal1, TexCoords).rgb;
+    NormalTex.xy = NormalTex.xy * 2.0 - 1.0;
+    vec3 normal = normalize(TBN * NormalTex);
     #else
     vec3 normal = normalize(Normal);
     #endif
@@ -66,6 +72,14 @@ void main()
 
     float spec_multiplier = pow(max(dot(normal, halfway_direction), 0.0), 16);
     vec3 specular = light.specular * spec_multiplier * SpecularTex.bbb;
+
+    // Attenuation
+    float distance = length(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    specular *= attenuation;
 
     // Result
     vec3 result = ambient + diffuse + specular;

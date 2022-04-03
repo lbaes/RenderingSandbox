@@ -11,7 +11,9 @@ out vec2 TexCoords;
 out vec3 Normal;
 out vec3 FragPos;// fragment position in world space
 out vec3 ViewPos;
+#if defined(USE_NORMAL_MAP)
 out mat3 TBN;
+#endif
 
 uniform mat4 model;
 uniform mat4 view;
@@ -39,6 +41,7 @@ void main()
     // Normals
     mat3 NormalMatrix = mat3(transpose(inverse_model));
     Normal =  NormalMatrix * aNormal;
+    #if defined(USE_NORMAL_MAP)
     TBN = create_TBN_matrix(NormalMatrix);
-
+    #endif
 }

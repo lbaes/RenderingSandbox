@@ -1,7 +1,7 @@
 #include "ArcBallCamera.h"
 #include "glm/ext/matrix_transform.hpp"
 
-void Eng::ArcBallCamera::UpdateCameraPosByAngle(float angleX, float angleY)
+void Eng::ArcBallCamera::UpdateCameraView(float angleX, float angleY)
 {
 	// position and pivot as Vec4
 	Vec4 position = {_camera_pos.x,_camera_pos.y,_camera_pos.z, 1.0f};
