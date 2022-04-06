@@ -60,7 +60,7 @@ public:
 		// Load shaders
 		Shader vShaderModel, fShaderModel, vShaderLine, fShaderLine;
 		unsigned int effects = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::NORMAL_MAP | ShaderEffects::SPECULAR_MAP;
-		unsigned int effects_simple = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::NORMAL_MAP | ShaderEffects::SPECULAR_MAP;
+		unsigned int effects_simple = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::SPECULAR_MAP;
 
 		vShaderModel.LoadFromDisk("resources/vUberShader.glsl");
 		fShaderModel.LoadFromDisk("resources/fUberShader.glsl");
@@ -207,13 +207,15 @@ public:
             current_shader = simple_model_shader_handle;
         }
 
-		// Setup Camera
-//		Vec3 light_pos = camera.GetPosition() + Vec3{0.0f, 0.0f, 0.5f};
-//		model_shader_handle.use();
-//		model_shader_handle.uniform_set("light.position", light_pos);
-//		simple_model_shader_handle.use();
-//		simple_model_shader_handle.uniform_set("light.position", light_pos);
-        camera.UpdateCameraView(last_angleX - angleX, last_angleY - angleY);
+		//Setup Camera
+		Vec3 light_pos = camera.GetPosition() + Vec3{0.0f, 0.0f, 0.5f};
+		model_shader_handle.use();
+		model_shader_handle.uniform_set("light.position", light_pos);
+		model_shader_handle.uniform_set("light_pos", light_pos);
+		simple_model_shader_handle.use();
+		simple_model_shader_handle.uniform_set("light.position", light_pos);
+		simple_model_shader_handle.uniform_set("light_pos", light_pos);
+		camera.UpdateCameraView(last_angleX - angleX, last_angleY - angleY);
         camera.UpdateProjection(45, aspectRatio);
 		renderer->SetCamera(camera);
 	}
