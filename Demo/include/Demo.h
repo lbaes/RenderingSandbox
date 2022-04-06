@@ -60,7 +60,7 @@ public:
 		// Load shaders
 		Shader vShaderModel, fShaderModel, vShaderLine, fShaderLine;
 		unsigned int effects = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::NORMAL_MAP | ShaderEffects::SPECULAR_MAP;
-		unsigned int effects_simple = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::SPECULAR_MAP;
+		unsigned int effects_simple = ShaderEffects::TEXTURES | ShaderEffects::AMBIENT_LIGHT | ShaderEffects::NORMAL_MAP | ShaderEffects::SPECULAR_MAP;
 
 		vShaderModel.LoadFromDisk("resources/vUberShader.glsl");
 		fShaderModel.LoadFromDisk("resources/fUberShader.glsl");
@@ -105,10 +105,11 @@ public:
 		lineY_handle = renderDevice->CreateLine(lineY);
 
         // Lights
-        Vec3 light_pos = cameraPos + Vec3{10.0f, 0.0f, 0.0f};
+        Vec3 light_pos = cameraPos;
 
         model_shader_handle.use();
-        model_shader_handle.uniform_set("light.position", light_pos);
+		model_shader_handle.uniform_set("light_pos", light_pos);
+		model_shader_handle.uniform_set("light.position", light_pos);
         model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
         model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
         model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
@@ -117,9 +118,10 @@ public:
         model_shader_handle.uniform_set("light.quadratic", 0.000007f);
 
 		simple_model_shader_handle.use();
+		simple_model_shader_handle.uniform_set("light_pos", light_pos);
 		simple_model_shader_handle.uniform_set("light.position", light_pos);
 		simple_model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
-		simple_model_shader_handle.uniform_set("light.ambient", Vec3{0.001});
+		simple_model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
 		simple_model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
         simple_model_shader_handle.uniform_set("light.constant", 1.0f);
         simple_model_shader_handle.uniform_set("light.linear", 0.0014f);
@@ -205,8 +207,12 @@ public:
             current_shader = simple_model_shader_handle;
         }
 
-
 		// Setup Camera
+//		Vec3 light_pos = camera.GetPosition() + Vec3{0.0f, 0.0f, 0.5f};
+//		model_shader_handle.use();
+//		model_shader_handle.uniform_set("light.position", light_pos);
+//		simple_model_shader_handle.use();
+//		simple_model_shader_handle.uniform_set("light.position", light_pos);
         camera.UpdateCameraView(last_angleX - angleX, last_angleY - angleY);
         camera.UpdateProjection(45, aspectRatio);
 		renderer->SetCamera(camera);
@@ -220,11 +226,13 @@ public:
         // draw model
         renderer->SetShader(current_shader);
 		renderer->RenderModel(sponza_handle, t);
-        renderer->RenderModel(backpack_handle, t3);
+
 		renderer->SetShader(simple_model_shader_handle);
 		renderer->RenderModel(container_handle, t2);
+		renderer->RenderModel(backpack_handle, t3);
 
-        // draw line
+
+		// draw line
 		if (drawGrid)
 		{
 			Color4 lineZ_color{ 0.0, 0.0, 1.0, 1.0 };

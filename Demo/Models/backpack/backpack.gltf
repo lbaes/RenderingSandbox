@@ -79,9 +79,9 @@
     ],
     "images" : [
         {
-            "mimeType" : "image/png",
+            "mimeType" : "image/jpeg",
             "name" : "1001_normal",
-            "uri" : "1001_normal.png"
+            "uri" : "1001_normal.jpg"
         },
         {
             "mimeType" : "image/jpeg",
@@ -89,9 +89,9 @@
             "uri" : "1001_albedo.jpg"
         },
         {
-            "mimeType" : "image/png",
+            "mimeType" : "image/jpeg",
             "name" : "1001_metallic",
-            "uri" : "1001_metallic.png"
+            "uri" : "1001_metallic.jpg"
         }
     ],
     "accessors" : [

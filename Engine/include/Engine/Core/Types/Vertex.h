@@ -6,7 +6,6 @@ namespace Eng {
         Vec3 position{};
         Vec3 vertex_normal{};
         Vec2 texture_coordinate{};
-		Vec3 tangent;
-		Vec3 bitangent;
+		Vec3 tangent{};
 	};
 }

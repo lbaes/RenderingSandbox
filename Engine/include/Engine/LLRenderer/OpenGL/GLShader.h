@@ -27,13 +27,17 @@ namespace Eng::ogl {
             glUniform2f(glGetUniformLocation(id, uniformName.c_str()), value.x, value.y);
         }
 
-        void uniform_set(const std::string &uniformName, Vec3 value) const {
+		void uniform_set(const std::string &uniformName, Vec3 value) const {
             glUniform3f(glGetUniformLocation(id, uniformName.c_str()), value.x, value.y, value.z);
         }
 
         void uniform_set(const std::string &uniformName, Vec4 value) const {
             glUniform4f(glGetUniformLocation(id, uniformName.c_str()), value.x, value.y, value.z, value.w);
         }
+
+		void uniform_set(const std::string &uniformName, Mat3 value) const {
+			glUniformMatrix3fv(glGetUniformLocation(id, uniformName.c_str()), 1, false, glm::value_ptr(value));
+		}
 
         void uniform_set(const std::string &uniformName, Mat4 value) const {
             glUniformMatrix4fv(glGetUniformLocation(id, uniformName.c_str()), 1, false, glm::value_ptr(value));

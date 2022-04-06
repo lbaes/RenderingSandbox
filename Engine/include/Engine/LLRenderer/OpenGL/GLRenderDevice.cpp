@@ -25,7 +25,14 @@ namespace Eng
 		GLuint EBO = 0;
 	};
 
+	struct Targets {
+		GLenum format;
+		GLint internalFormat;
+	};
+
 	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage);
+
+	constexpr Targets GetTargets(Texture2DUsage usage, int channels);
 
 	BufferHandles CreateBuffers(const std::vector<Vertex>& vertexBuffer, const std::vector<GLuint>& indexBuffer);
 
@@ -68,27 +75,13 @@ namespace Eng
 		glGenTextures(1, &texture_id);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 
-		// Copy bytes to opengl texture
 		assert(tex.GetData() != nullptr);
+		Targets targets = GetTargets(usage, tex.GetNumberOfChannels());
+		glTexImage2D(GL_TEXTURE_2D, 0, targets.internalFormat, tex.GetWidth(), tex.GetHeight(), 0, targets.format, GL_UNSIGNED_BYTE, tex.GetData());
 
-		switch (usage)
-		{
-		case Texture2DUsage::DIFFUSE:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, tex.GetWidth(), tex.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.GetData());
-			break;
-		case Texture2DUsage::SPECULAR:
-		case Texture2DUsage::NORMAL:
-		case Texture2DUsage::HEIGHT:
-		case Texture2DUsage::AMBIENT:
-		default:
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.GetWidth(), tex.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.GetData());
-			break;
-		}
-
-		// Mipmaps
 		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -96,7 +89,7 @@ namespace Eng
 		t.id = texture_id;
 		t.usage = usage;
 		loaded_textures.emplace(tex.GetPath(), t);
-		logger->LogInfo("loaded texture {} with id: {}", tex.GetPath(), t.id);
+		logger->LogInfo("loaded texture {} with id: {}, usage: {} ", tex.GetPath(), t.id, static_cast<int>(t.usage));
 		return t;
 	}
 
@@ -191,10 +184,6 @@ namespace Eng
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
 
-		// bitangents
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
-
 		// unbind
 		glBindVertexArray(0);
 
@@ -211,7 +200,7 @@ namespace Eng
 			{
 				Texture2D loaded_texture;
 				loaded_texture.LoadFromFile(texture.file_path);
-				auto tex_handle = CreateTexture2D(loaded_texture);
+				auto tex_handle = CreateTexture2D(loaded_texture, texture.usage);
 				tex_handle.usage = texture.usage;
 				loaded_textures.emplace(texture.file_path, tex_handle);
 				m.textures.push_back(tex_handle);
@@ -312,5 +301,40 @@ namespace Eng
 		}
 
 		return linkSuccess;
+	}
+
+	constexpr Targets GetTargets(Texture2DUsage usage, int channels)
+	{
+		Targets t{};
+		switch (channels)
+		{
+		case 1:
+			t.format = GL_RED;
+			t.internalFormat = GL_R8;
+			break;
+		case 2:
+			t.format = GL_RG;
+			t.internalFormat = GL_RG8;
+			break;
+		case 3:
+			t.format = GL_RGB;
+			if (usage == Texture2DUsage::DIFFUSE)
+			{
+				t.internalFormat = GL_SRGB8;
+			}else {
+				t.internalFormat = GL_RGB8;
+			}
+			break;
+		case 4:
+			t.format = GL_RGBA;
+			if (usage == Texture2DUsage::DIFFUSE)
+				t.internalFormat = GL_SRGB8_ALPHA8;
+			else
+				t.internalFormat = GL_RGBA8;
+			break;
+		default:
+			break;
+		}
+		return t;
 	}
 }

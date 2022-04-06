@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include "ModelLoader.h"
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Model.h"
@@ -17,12 +18,13 @@ namespace Eng {
     void ModelLoader::LoadModel(const std::string& path, Model& model )
 	{
         Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace );
+        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace  );
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
-            std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-            throw std::runtime_error("RESOURCE LOAD ERROR");
+			std::stringstream error_message;
+			error_message << "RESOURCE LOAD ERROR" << import.GetErrorString() << "\n";
+            throw std::runtime_error(error_message.str());
         }
         std::string file_directory = path.substr(0, path.find_last_of('/'));
         ProcessNode(scene->mRootNode, scene, model, file_directory);
@@ -51,7 +53,7 @@ namespace Eng {
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
-            Vertex vertex;
+            Vertex vertex{};
             // process vertex positions
             Vec3 vec;
             vec.x = mesh->mVertices[i].x;
@@ -74,9 +76,6 @@ namespace Eng {
                 tex_coord.y = mesh->mTextureCoords[0][i].y;
                 vertex.texture_coordinate = tex_coord;
             }
-            else {
-                vertex.texture_coordinate = Vec2{ 0.0, 0.0 };
-            }
 
 			// tangent and bitangent
 			if (mesh->HasTangentsAndBitangents()){
@@ -84,16 +83,18 @@ namespace Eng {
 				tangent.x = mesh->mTangents[i].x;
 				tangent.y = mesh->mTangents[i].y;
 				tangent.z = mesh->mTangents[i].z;
-				vertex.tangent = tangent;
 
 				bitangent.x = mesh->mBitangents[i].x;
 				bitangent.y = mesh->mBitangents[i].y;
 				bitangent.z = mesh->mBitangents[i].z;
-				vertex.bitangent = bitangent;
-			}else {
-                //vertex.tangent = Vec3 {0.0f, 0.0f, 1.0f};
-                //vertex.bitangent = Vec3 {0.0f, 0.0f, 1.0f};
-            }
+
+				// needs more test
+				if (glm::dot(glm::cross(vertex.vertex_normal, tangent), bitangent) < 0.0f){
+					tangent = tangent * -1.0f;
+				}
+
+				vertex.tangent = tangent;
+			}
 
             vertices.push_back(vertex);
         }
