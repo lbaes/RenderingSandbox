@@ -26,9 +26,29 @@ void Eng::GLRenderer::RenderModel(const GPUModelHandle& model, Eng::Transform t)
 	_shader.uniform_set("view", _camera.GetView());
 	_shader.uniform_set("projection", _camera.GetProjection());
 	_shader.uniform_set("view_pos", _camera.GetPosition());
+	_shader.uniform_set("directional_light.direction", Vec3{0.0f, -1.0f, 0.0f});
+	_shader.uniform_set("directional_light.ambient", Vec3{0.1f});
+	_shader.uniform_set("directional_light.diffuse", Vec3{0.3f});
+	_shader.uniform_set("directional_light.specular", Vec3{0.2f});
 
 	UpdateShaderLightUniforms(_shader, _staticPointLights);
 	UpdateShaderLightUniforms(_shader, _dynamicPointLights);
+
+	const int max_lights = 10;
+	const int lights_in_use = _staticPointLights.size() + _dynamicPointLights.size();
+	for (int i = lights_in_use; i < max_lights ; ++i)
+	{
+		_shader.uniform_set_structArray_member("light", i, "ambient", Vec3{0.0f});
+		_shader.uniform_set_structArray_member("light", i, "diffuse", Vec3{0.0f});
+		_shader.uniform_set_structArray_member("light", i, "specular",Vec3{0.0f});
+		_shader.uniform_set_structArray_member("light", i, "constant", 1.0f);
+		_shader.uniform_set_structArray_member("light", i, "linear", 1.0f);
+		_shader.uniform_set_structArray_member("light", i, "quadratic", 1.0f);
+		if (_shader.effects & Eng::ShaderEffects::NORMAL_MAP)
+			_shader.uniform_set_array("light_pos", i, Vec3{0.0f});
+		else
+			_shader.uniform_set_structArray_member("light", i, "position", Vec3{0.0f});
+	}
 
     for (const auto& mesh: model.meshes) {
         RenderMesh(mesh);

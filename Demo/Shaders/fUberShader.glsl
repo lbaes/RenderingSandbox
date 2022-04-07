@@ -1,4 +1,4 @@
-#define NR_POINT_LIGHTS 5
+#define NR_POINT_LIGHTS 10
 
 out vec4 FragColor;
 
@@ -18,12 +18,20 @@ struct Material {
 
 in TangentPointLight
 {
+    vec3 DirectionalLightTangent;
     vec3 FragPosTangent;
     vec3 ViewPosTangent;
     vec3 LightPosTangent[NR_POINT_LIGHTS];
 } tangentPointLight;
 
 #endif
+
+struct DirectionalLight {
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
 struct PointLight {
     vec3 position;
@@ -37,21 +45,31 @@ struct PointLight {
 
 uniform Material material;
 uniform PointLight light[NR_POINT_LIGHTS];
+uniform DirectionalLight directional_light;
 
-vec3 calcPointLight(PointLight pl, vec3 lightPos, vec3 normal, vec3 fragPos, vec3 viewPos){
+vec3 calDirectionalLight(DirectionalLight dl, vec3 lightDirection, vec3 fragPos, vec3 viewPos, vec4 diffuse_texel, vec3 specular_texel, vec3 normal ){
+    vec3 light_direction = normalize(-lightDirection);
+    vec3 view_direction = normalize(viewPos - fragPos);
+    vec3 halfway_direction = normalize(light_direction + view_direction);
+
+    float diffuse_multiplier = max(dot(normal, light_direction), 0.0);
+    vec3 diffuse = diffuse_multiplier * dl.diffuse * diffuse_texel.rgb;
+
+    vec3 ambient = dl.ambient * diffuse_texel.rgb;
+
+    float spec_multiplier = pow(max(dot(normal, halfway_direction), 0.0), 128);
+    vec3 specular = dl.specular * spec_multiplier * specular_texel;
+
+    vec3 result = ambient + diffuse + specular;
+    return result;
+}
+
+vec3 calcPointLight(PointLight pl, vec3 lightPos, vec3 normal, vec3 fragPos, vec3 viewPos, vec4 diffuse_texel, vec3 specular_texel){
     // Light
     vec3 light_direction = normalize(lightPos - fragPos);
     vec3 view_direction = normalize(viewPos - fragPos);
     vec3 halfway_direction = normalize(light_direction + view_direction);
     float distance = length(lightPos - fragPos);
-
-    // Diffuse
-    #if defined(USE_DIFFUSE_TEXTURE)
-    vec4 diffuse_texel = texture(material.diffuse1, TexCoords);
-    if (diffuse_texel.a < 0.1) discard;
-    #elif defined(USE_DIFFUSE_COLOR)
-    vec4 diffuse_texel = material.color;
-    #endif
 
     float diffuse_multiplier = max(dot(normal, light_direction), 0.0);
     vec3 diffuse = diffuse_multiplier * pl.diffuse * diffuse_texel.rgb;
@@ -63,13 +81,6 @@ vec3 calcPointLight(PointLight pl, vec3 lightPos, vec3 normal, vec3 fragPos, vec
     vec3 ambient = pl.ambient * material.color.rgb;
     #else
     vec3 ambient = vec3(0.0f);
-    #endif
-
-    // Specular
-    #if defined(USE_SPECULAR_MAP)
-    vec3 specular_texel = diffuse_texel.rgb * texture(material.specular1, TexCoords).bbb;
-    #else
-    vec3 specular_texel = vec3(0.0f);
     #endif
 
     float spec_multiplier = pow(max(dot(normal, halfway_direction), 0.0), 128);
@@ -94,24 +105,43 @@ vec3 calcPointLight(PointLight pl, vec3 lightPos, vec3 normal, vec3 fragPos, vec
 
 void main()
 {
+
+    // Diffuse
+    #if defined(USE_DIFFUSE_TEXTURE)
+    vec4 diffuse_texel = texture(material.diffuse1, TexCoords);
+    if (diffuse_texel.a < 0.1) discard;
+    #elif defined(USE_DIFFUSE_COLOR)
+    vec4 diffuse_texel = material.color;
+    #endif
+
+    // Specular
+    #if defined(USE_SPECULAR_MAP)
+    vec3 specular_texel = diffuse_texel.rgb * texture(material.specular1, TexCoords).bbb;
+    #else
+    vec3 specular_texel = vec3(0.0f);
+    #endif
+
     // Normals
     #if defined(USE_NORMAL_MAP)
     vec3 NormalTex = texture(material.normal1, TexCoords).rgb;
     vec3 normal = normalize(NormalTex * 2.0f - 1.0f);
     vec3 fragPos = tangentPointLight.FragPosTangent;
     vec3 viewPos = tangentPointLight.ViewPosTangent;
+    vec3 lightDirection = tangentPointLight.DirectionalLightTangent;
     #else
     vec3 normal = normalize(Normal);
     vec3 fragPos = FragPos;
     vec3 viewPos = ViewPos;
+    vec3 lightDirection = directional_light.direction;
     #endif
 
     vec3 result = vec3(0.0f);
+    result += calDirectionalLight(directional_light, lightDirection, fragPos, viewPos, diffuse_texel, specular_texel, normal);
     for (int i = 0; i < NR_POINT_LIGHTS; ++i){
         #if defined(USE_NORMAL_MAP)
-        result += calcPointLight(light[i], tangentPointLight.LightPosTangent[i], normal, fragPos, viewPos);
+        result += calcPointLight(light[i], tangentPointLight.LightPosTangent[i], normal, fragPos, viewPos, diffuse_texel, specular_texel);
         #else
-        result += calcPointLight(light[i], light[i].position, normal, fragPos, viewPos);
+        result += calcPointLight(light[i], light[i].position, normal, fragPos, viewPos, diffuse_texel, specular_texel);
         #endif
     }
     FragColor = vec4(result, 1.0);

@@ -39,7 +39,7 @@ public:
 	// Camera settings
     FreeCamera camera;
 	const float camZ = 0.0f;
-	const float camX = 200.0f;
+	const float camX = 0.0f;
 	const float camY = 300.0f;
 	float angleX = 0.0f;
 	float angleY = 0.0f;
@@ -109,24 +109,26 @@ public:
         // Lights
 		PointLight p{};
 		p.position = cameraPos;
-		p.diffuse = Vec3{0.5, 0.5, 0.5};
-		p.ambient = Vec3{0.01};
-		p.specular = {1.0, 1.0, 1.0};
+		p.diffuse = Vec3{0.8f};
+		p.ambient = Vec3{0.0f};
+		p.specular = Vec3{1.0f};
 		p.constant = 1.0f;
 		p.linear = 0.0014f;
 		p.quadratic = 0.000007f;
+
+		p.position = cameraPos + Vec3{-400.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
-		p.position = cameraPos + Vec3{30.0f, 0.0f, 0.0f};
+		p.position = cameraPos + Vec3{-200.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
-		p.position = cameraPos + Vec3{60.0f, 0.0f, 0.0f};
+		p.position = cameraPos + Vec3{0.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
-		p.position = cameraPos + Vec3{90.0f, 0.0f, 0.0f};
+		p.position = cameraPos + Vec3{200.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
-		p.position = cameraPos + Vec3{120.0f, 0.0f, 0.0f};
+		p.position = cameraPos + Vec3{400.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
 		current_shader = model_shader_handle;

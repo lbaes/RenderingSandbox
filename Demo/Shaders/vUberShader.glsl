@@ -1,4 +1,4 @@
-#define NR_POINT_LIGHTS 5
+#define NR_POINT_LIGHTS 10
 
 // vertex attributes
 layout (location = 0) in vec3 aPos;
@@ -15,11 +15,13 @@ out vec3 ViewPos;
 #if defined(USE_NORMAL_MAP)
 out TangentPointLight
 {
+    vec3 DirectionalLightTangent;
     vec3 FragPosTangent;
     vec3 ViewPosTangent;
     vec3 LightPosTangent[NR_POINT_LIGHTS];
 };
 uniform vec3 light_pos[NR_POINT_LIGHTS];
+uniform vec3 directional_light_direction;
 #endif
 
 uniform mat4 model;
@@ -52,6 +54,7 @@ void main()
     mat3 TBN = create_TBN_matrix(NormalMatrix);
     FragPosTangent = TBN * FragPos;
     ViewPosTangent =  TBN * view_pos;
+    DirectionalLightTangent = TBN * directional_light_direction;
     for (int i = 0; i < NR_POINT_LIGHTS; ++i){
         LightPosTangent[i] = TBN * light_pos[i];
     }
