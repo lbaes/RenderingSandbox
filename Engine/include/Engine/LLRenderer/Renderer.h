@@ -3,6 +3,7 @@
 #include "Engine/Core/Types/Transform.h"
 #include "Engine/Core/Types/Transform.h"
 #include "Engine/Core/Types/Color.h"
+#include "PointLight.h"
 
 namespace Eng
 {
@@ -16,6 +17,8 @@ namespace Eng
 		virtual void SetCamera(const Camera& camera) = 0;
 		virtual void SetClearColor(Color4 color) = 0;
 		virtual void Clear() = 0;
+		virtual void AddStaticPointLights(const std::vector<PointLight>& lights) = 0;
+		virtual void AddStaticPointLights(PointLight light) = 0;
 		virtual ~Renderer() = default;
 	};
 }

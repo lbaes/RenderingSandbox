@@ -27,6 +27,7 @@ namespace Eng {
 
 	void Shader::ConfigureEffects(unsigned int effects)
 	{
+		_effects = effects;
 		defines = "#version 450 core\n";
 		if (effects & ShaderEffects::TEXTURES){
 			defines += "#define USE_DIFFUSE_TEXTURE\n";
@@ -50,6 +51,11 @@ namespace Eng {
 	const std::string& Shader::GetShaderSourceCode() const
 	{
 		return source;
+	}
+
+	unsigned int Shader::GetShaderEffects() const
+	{
+		return _effects;
 	}
 
 	ShaderType GetShaderTypeFromFileName(const std::string& file_path) {

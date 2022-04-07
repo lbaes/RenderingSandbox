@@ -157,6 +157,7 @@ namespace Eng
 
 		GPUShaderHandle sh;
 		sh.id = programID;
+		sh.effects = vertexShader.GetShaderEffects() | fragmentShader.GetShaderEffects();
 		logger->LogInfo("Created shader program with ID: {}", sh.id);
 		return sh;
 	}

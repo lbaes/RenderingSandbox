@@ -10,6 +10,7 @@
 #include "Engine/Core/Types/Color.h"
 #include "Engine/LLRenderer/RenderDevice.h"
 #include "Engine/LLRenderer/Renderer.h"
+#include "Engine/LLRenderer/PointLight.h"
 
 namespace Eng
 {
@@ -32,13 +33,10 @@ namespace Eng
 		Input* input;
 		std::unique_ptr<RenderDevice> renderDevice;
 		std::unique_ptr<Renderer> renderer;
-
 	private:
 		friend Window* GetWindow();
 		friend Input* GetInput();
-
 		Logger* logger;
-
 		bool isRunning;
 	};
 }

@@ -26,10 +26,12 @@ namespace Eng {
 		std::string GetShaderSourceCodeComplete() const;
 		const std::string& GetShaderSourceCode() const;
 		const std::string& GetShaderDefines() const;
+		unsigned int GetShaderEffects() const;
 		ShaderType GetShaderType() const;
 	private:
 		std::string source;
 		std::string defines = "#version 450 core\n";
 		ShaderType shader_type = ShaderType::INVALID;
+		unsigned int _effects = 0;
 	};
 }

@@ -4,6 +4,7 @@
 #include "Engine/Core/Types/Color.h"
 #include "Engine/LLRenderer/Camera.h"
 #include "Engine/LLRenderer/RenderDevice.h"
+#include "Engine/LLRenderer/PointLight.h"
 
 namespace Eng {
     class GLRenderer : public Renderer{
@@ -14,9 +15,13 @@ namespace Eng {
         void SetShader(GPUShaderHandle shader) override;
         void SetCamera(const Camera& camera) override;
 		void SetClearColor(Color4 color) override;
+		void AddStaticPointLights(const std::vector<PointLight>& lights) override;
+		void AddStaticPointLights(PointLight light) override;
 		void Clear() override;
 	private:
         GPUShaderHandle _shader;
         Camera _camera;
-    };
+		std::vector<PointLight> _dynamicPointLights;
+		std::vector<PointLight> _staticPointLights;
+	};
 }

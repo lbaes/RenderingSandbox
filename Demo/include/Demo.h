@@ -6,6 +6,7 @@
 #include "Engine/Resources/Model.h"
 #include "Engine/LLRenderer/ArcBallCamera.h"
 #include "Engine/LLRenderer/FreeCamera.hpp"
+#include "Engine/LLRenderer/PointLight.h"
 
 using namespace Eng;
 
@@ -37,18 +38,19 @@ public:
 
 	// Camera settings
     FreeCamera camera;
-	float camZ = 0.0f;
-	float camX = 200.0f;
-	float camY = 300.0f;
+	const float camZ = 0.0f;
+	const float camX = 200.0f;
+	const float camY = 300.0f;
 	float angleX = 0.0f;
 	float angleY = 0.0f;
 	float last_angleX = 0.0f;
 	float last_angleY = 0.0f;
-	float last_mouseX = 0.0f;
-	float last_mouseY = 0.0f;
 	float aspectRatio = 1.0f;
     Vec3 cameraUp = Vec3{0.0, 1.0, 0.0};
     Vec3 cameraPos = Vec3{camX, camY, camZ};
+
+	// Lights
+	std::vector<PointLight> lights;
 
 	// Grid settings
 	bool drawGrid = false;
@@ -105,31 +107,32 @@ public:
 		lineY_handle = renderDevice->CreateLine(lineY);
 
         // Lights
-        Vec3 light_pos = cameraPos;
+		PointLight p{};
+		p.position = cameraPos;
+		p.diffuse = Vec3{0.5, 0.5, 0.5};
+		p.ambient = Vec3{0.01};
+		p.specular = {1.0, 1.0, 1.0};
+		p.constant = 1.0f;
+		p.linear = 0.0014f;
+		p.quadratic = 0.000007f;
+		lights.push_back(p);
 
-        model_shader_handle.use();
-		model_shader_handle.uniform_set("light_pos", light_pos);
-		model_shader_handle.uniform_set("light.position", light_pos);
-        model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
-        model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
-        model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
-        model_shader_handle.uniform_set("light.constant", 1.0f);
-        model_shader_handle.uniform_set("light.linear", 0.0014f);
-        model_shader_handle.uniform_set("light.quadratic", 0.000007f);
+		p.position = cameraPos + Vec3{30.0f, 0.0f, 0.0f};
+		lights.push_back(p);
 
-		simple_model_shader_handle.use();
-		simple_model_shader_handle.uniform_set("light_pos", light_pos);
-		simple_model_shader_handle.uniform_set("light.position", light_pos);
-		simple_model_shader_handle.uniform_set("light.diffuse", Vec3{0.5, 0.5, 0.5});
-		simple_model_shader_handle.uniform_set("light.ambient", Vec3{0.01});
-		simple_model_shader_handle.uniform_set("light.specular", Vec3{1.0, 1.0, 1.0});
-        simple_model_shader_handle.uniform_set("light.constant", 1.0f);
-        simple_model_shader_handle.uniform_set("light.linear", 0.0014f);
-        simple_model_shader_handle.uniform_set("light.quadratic", 0.000007f);
+		p.position = cameraPos + Vec3{60.0f, 0.0f, 0.0f};
+		lights.push_back(p);
 
-        current_shader = model_shader_handle;
+		p.position = cameraPos + Vec3{90.0f, 0.0f, 0.0f};
+		lights.push_back(p);
+
+		p.position = cameraPos + Vec3{120.0f, 0.0f, 0.0f};
+		lights.push_back(p);
+
+		current_shader = model_shader_handle;
 
 		// Renderer config
+		renderer->AddStaticPointLights(lights);
 		renderer->SetCamera(camera);
 		renderer->SetClearColor(Color4{0.0f, 0.0f, 0.0f, 1.0f});
 
@@ -207,14 +210,8 @@ public:
             current_shader = simple_model_shader_handle;
         }
 
-		//Setup Camera
-		Vec3 light_pos = camera.GetPosition() + Vec3{0.0f, 0.0f, 0.5f};
-		model_shader_handle.use();
-		model_shader_handle.uniform_set("light.position", light_pos);
-		model_shader_handle.uniform_set("light_pos", light_pos);
-		simple_model_shader_handle.use();
-		simple_model_shader_handle.uniform_set("light.position", light_pos);
-		simple_model_shader_handle.uniform_set("light_pos", light_pos);
+
+		// Update camera
 		camera.UpdateCameraView(last_angleX - angleX, last_angleY - angleY);
         camera.UpdateProjection(45, aspectRatio);
 		renderer->SetCamera(camera);
@@ -228,10 +225,10 @@ public:
         // draw model
         renderer->SetShader(current_shader);
 		renderer->RenderModel(sponza_handle, t);
+		renderer->RenderModel(backpack_handle, t3);
 
 		renderer->SetShader(simple_model_shader_handle);
 		renderer->RenderModel(container_handle, t2);
-		renderer->RenderModel(backpack_handle, t3);
 
 
 		// draw line
