@@ -15,10 +15,10 @@ namespace Eng {
 		virtual bool IsPaused() const;
 		virtual bool IsStarted() const;
 		virtual Ticks GetTime() const;
-		bool IsStopped() {
+		bool IsStopped() const {
 			return !IsStarted();
 		}
-		bool IsRunning() {
+		bool IsRunning() const {
 			return !IsPaused();
 		}
 	private:

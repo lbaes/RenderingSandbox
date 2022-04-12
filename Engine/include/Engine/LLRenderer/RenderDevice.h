@@ -6,12 +6,15 @@
     #include "OpenGL/GLModel.h"
     #include "OpenGL/GLLine.h"
 	#include "OpenGL/GLFramebuffer.h"
-    using GPUTextureHandle = Eng::ogl::GLTexture;
-    using GPUShaderHandle = Eng::ogl::GLShader;
+	#include "OpenGL/GLQuad.h"
+using GPUTextureHandle = Eng::ogl::GLTexture;
+    using GPUShader = Eng::ogl::GLShader;
     using GPUMeshHandle = Eng::ogl::GLMesh;
     using GPUModelHandle = Eng::ogl::GLModel;
     using GPULineHandle = Eng::ogl::GLLine;
-	using GPUFramebuffer = Eng::ogl::GLFramebuffer;
+	using GPURenderTarget = Eng::ogl::GLFramebuffer;
+	using GPURenderTargetAttachments = Eng::ogl::GLFrameBufferAttachments;
+	using GPURenderTargetOptions = Eng::ogl::GLFrameBufferOptions;
 #endif
 #include <unordered_map>
 #include <string>
@@ -27,9 +30,10 @@ namespace Eng {
 	public:
 		void InitRenderDevice();
 		GPUTextureHandle CreateTexture2D(const Texture2D& tex, Texture2DUsage usage = Texture2DUsage::DIFFUSE);
-		GPUShaderHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
+		GPUShader CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
 		GPUMeshHandle CreateMesh(const Mesh& mesh);
 		GPUModelHandle CreateModel(const Model& model);
+		GPURenderTarget CreateRenderTarget(int width, int height, GPURenderTargetAttachments attachments = GPURenderTargetAttachments::COLOR, GPURenderTargetOptions options = static_cast<GPURenderTargetOptions>(0u));
 		GPULineHandle CreateLine(const Line& line);
 	private:
 		bool initialized = false;

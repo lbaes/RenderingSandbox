@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <span>
+#include <cassert>
 
 namespace Eng
 {
@@ -50,11 +51,11 @@ namespace Eng
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorLogger::gl_error_logger, nullptr);
 #endif // ENGINE_DEBUG
-        // reinterpret_cast<const char*> to get rid of fmt warning
-        logger->LogInfo("Vendor: {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-        logger->LogInfo("Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-        logger->LogInfo("Version: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-        logger->LogInfo("GLSL Version: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+		// reinterpret_cast<const char*> to get rid of fmt warning
+		logger->LogInfo("Vendor: {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+		logger->LogInfo("Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+		logger->LogInfo("Version: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+		logger->LogInfo("GLSL Version: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_FRAMEBUFFER_SRGB);
 		glEnable(GL_DEPTH_TEST);
@@ -76,14 +77,17 @@ namespace Eng
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 
 		assert(tex.GetData() != nullptr);
+		assert(tex.GetWidth() == tex.GetHeight());
 		Targets targets = GetTargets(usage, tex.GetNumberOfChannels());
-		glTexImage2D(GL_TEXTURE_2D, 0, targets.internalFormat, tex.GetWidth(), tex.GetHeight(), 0, targets.format, GL_UNSIGNED_BYTE, tex.GetData());
-
-		glGenerateMipmap(GL_TEXTURE_2D);
+		const int num_mipmap_level = int(floor(log2(fmax(tex.GetWidth(), tex.GetHeight()))) + 1);
+		glTexStorage2D(GL_TEXTURE_2D, num_mipmap_level, targets.internalFormat, tex.GetWidth(), tex.GetHeight());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex.GetWidth(), tex.GetHeight(), targets.format, GL_UNSIGNED_BYTE,
+				tex.GetData());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		GPUTextureHandle t;
 		t.id = texture_id;
@@ -110,7 +114,8 @@ namespace Eng
 
 		// Copy index data to EBO
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), &indexBuffer[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), &indexBuffer[0],
+				GL_STATIC_DRAW);
 
 		BufferHandles bh;
 		bh.VAO = vao_id;
@@ -119,7 +124,7 @@ namespace Eng
 		return bh;
 	}
 
-	GPUShaderHandle RenderDevice::CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader)
+	GPUShader RenderDevice::CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader)
 	{
 		unsigned int vShaderID, fShaderID, programID;
 
@@ -155,7 +160,7 @@ namespace Eng
 		glDeleteShader(vShaderID);
 		glDeleteShader(fShaderID);
 
-		GPUShaderHandle sh;
+		GPUShader sh;
 		sh.id = programID;
 		sh.effects = vertexShader.GetShaderEffects() | fragmentShader.GetShaderEffects();
 		logger->LogInfo("Created shader program with ID: {}", sh.id);
@@ -253,6 +258,59 @@ namespace Eng
 		return lineHandle;
 	}
 
+	GPURenderTarget RenderDevice::CreateRenderTarget(int width, int height, GPURenderTargetAttachments attachments, GPURenderTargetOptions options)
+	{
+		GPURenderTarget renderTarget;
+		renderTarget.width = width;
+		renderTarget.height = height;
+		unsigned int FBO;
+		glGenFramebuffers(1, &FBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+		if (attachments & GPURenderTargetAttachments::COLOR)
+		{
+			unsigned int color;
+			glGenTextures(1, &color);
+			glBindTexture(GL_TEXTURE_2D, color);
+			if (options & GPURenderTargetOptions::SRGB_COLOR)
+				glTexStorage2D(GL_TEXTURE_2D, 1, GL_SRGB8, width, height);
+			else
+				glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, width, height);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+			renderTarget.COLOR_ID = color;
+		}
+
+		if (attachments & GPURenderTargetAttachments::DEPTH) {
+			unsigned int depth;
+			glGenTextures(1, &depth);
+			glBindTexture(GL_TEXTURE_2D, depth);
+			glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH, width, height);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth, 0);
+			renderTarget.DEPTH_ID = depth;
+		}
+
+		if (attachments & GPURenderTargetAttachments::STENCIL){
+			unsigned int stencil;
+			glGenTextures(1, &stencil);
+			glBindTexture(GL_TEXTURE_2D, stencil);
+			glTexStorage2D(GL_TEXTURE_2D, 1, GL_STENCIL, width, height);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencil, 0);
+			renderTarget.STENCIL_ID = stencil;
+		}
+
+		assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+
+		renderTarget.ID = FBO;
+		renderTarget.attachments = attachments;
+		renderTarget.isSRGB = options & GPURenderTargetOptions::SRGB_COLOR;
+		return renderTarget;
+	}
 
 	constexpr GLenum GetGLUsage(VERTEX_BUFFER_USAGE usage)
 	{
@@ -260,11 +318,9 @@ namespace Eng
 		{
 		case Eng::VERTEX_BUFFER_USAGE::DYNAMIC:
 			return GL_DYNAMIC_DRAW;
-			break;
 		case Eng::VERTEX_BUFFER_USAGE::STATIC:
 		default:
 			return GL_STATIC_DRAW;
-			break;
 		}
 	}
 
@@ -322,7 +378,9 @@ namespace Eng
 			if (usage == Texture2DUsage::DIFFUSE)
 			{
 				t.internalFormat = GL_SRGB8;
-			}else {
+			}
+			else
+			{
 				t.internalFormat = GL_RGB8;
 			}
 			break;

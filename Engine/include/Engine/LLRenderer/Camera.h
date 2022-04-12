@@ -6,9 +6,9 @@ namespace Eng {
     class Camera {
     public:
         Camera();
-		Camera(Vec3 cameraPos, Vec3 cameraTarget, Vec3 cameraUp, float fov, float aspectRatio, float zNear = 0.1f, float zFar= 10000.0f);
+		Camera(Vec3 cameraPos, Vec3 cameraTarget, Vec3 cameraUp, float fov, float aspectRatio, float zNear = 0.1f, float zFar= 5000.0f);
 		void UpdateCamera(Vec3 cameraPos, Vec3 cameraTarget, Vec3 cameraUp);
-		void UpdateProjection(float fov, float aspectRatio, float zNear = 0.1f, float zFar= 10000.0f);
+		void UpdateProjection(float fov, float aspectRatio, float zNear = 0.1f, float zFar= 5000.0f);
 		Mat4 GetView() const;
 		Mat4 GetProjection() const;
 		Vec3 GetPosition() const;

@@ -13,7 +13,7 @@ using namespace Eng;
 class Demo : public Eng::Application {
 public:
 	// GPU handles
-	GPUShaderHandle model_shader_handle, line_shader_handle, simple_model_shader_handle, current_shader;
+	GPUShader model_shader_handle, line_shader_handle, simple_model_shader_handle, *current_shader;
 	GPUModelHandle sponza_handle, container_handle, backpack_handle;
     GPULineHandle lineX_handle, lineY_handle, lineZ_handle;
 
@@ -107,6 +107,12 @@ public:
 		lineY_handle = renderDevice->CreateLine(lineY);
 
         // Lights
+		DirectionalLight dl{};
+		dl.direction = Vec3{0.0f, -1.0f, 0.0f};
+		dl.ambient = Vec3{0.1f};
+		dl.diffuse = Vec3{0.3f};
+		dl.specular = Vec3{0.2f};
+
 		PointLight p{};
 		p.position = cameraPos;
 		p.diffuse = Vec3{0.8f};
@@ -131,12 +137,14 @@ public:
 		p.position = cameraPos + Vec3{400.0f, 0.0f, 0.0f};
 		lights.push_back(p);
 
-		current_shader = model_shader_handle;
+		current_shader = &model_shader_handle;
 
 		// Renderer config
-		renderer->AddStaticPointLights(lights);
+		renderer->SetShader(*current_shader);
+		renderer->SetStaticPointLights(lights);
+		renderer->SetDirectionalLight(dl);
 		renderer->SetCamera(camera);
-		renderer->SetClearColor(Color4{0.0f, 0.0f, 0.0f, 1.0f});
+		renderer->SetClearColor(Color4{135.f/255.f, 206.f/255.f, 235.f/255.f, 1.0f});
 
 		// Camera
 		camera.UpdateCamera(cameraPos, {camX+1, camY, camZ}, cameraUp);
@@ -205,13 +213,12 @@ public:
 
         // Switch shaders
         if (input->KeyDown(Keys::N)){
-            current_shader = model_shader_handle;
+            current_shader = &model_shader_handle;
         }
 
         if (input->KeyDown(Keys::M)){
-            current_shader = simple_model_shader_handle;
+            current_shader = &simple_model_shader_handle;
         }
-
 
 		// Update camera
 		camera.UpdateCameraView(last_angleX - angleX, last_angleY - angleY);
@@ -225,7 +232,7 @@ public:
 		renderer->Clear();
 
         // draw model
-        renderer->SetShader(current_shader);
+        renderer->SetShader(*current_shader);
 		renderer->RenderModel(sponza_handle, t);
 		renderer->RenderModel(backpack_handle, t3);
 
@@ -240,9 +247,9 @@ public:
 			Color4 lineX_color{ 1.0, 0.0, 0.0, 1.0 };
 			Color4 lineY_color{ 0.0, 1.0, 0.0, 1.0 };
 			renderer->SetShader(line_shader_handle);
-			renderer->RenderLine(lineX_handle, lineX_color);
-			renderer->RenderLine(lineZ_handle, lineZ_color);
-			renderer->RenderLine(lineY_handle, lineY_color);
+			renderer->RenderDebugLine(lineX_handle, lineX_color);
+			renderer->RenderDebugLine(lineZ_handle, lineZ_color);
+			renderer->RenderDebugLine(lineY_handle, lineY_color);
 		}
 	}
 };
