@@ -1,25 +1,21 @@
 #include "Shader.h"
 #include <stdexcept>
-#include <string>
 #include <sstream>
 #include <Engine/Utility/ReadFile.h>
 
 namespace Eng {
-	ShaderType GetShaderTypeFromFileName(const std::string& filename);
-
-	Shader Shader::LoadFromDisk(const std::string& path)
+	ShaderType GetShaderTypeFromFileName(const std::string& file_path);
+	void Shader::LoadFromDisk(const std::string& path)
 	{
-		Shader shader;
-		shader.shader_source = Util::read_file(path);
-		shader.shader_type = GetShaderTypeFromFileName(path);
-		return shader;
+		source = Util::read_file(path);
+		shader_type = GetShaderTypeFromFileName(path);
 	}
 
-	const std::string& Shader::GetShaderSource() const
+	std::string Shader::GetShaderSourceCodeComplete() const
 	{
-		if ("" == shader_source)
+		if (source.empty())
 			throw std::runtime_error("SHADER WAS NOT INITIALIZED OR IS EMPTY");
-		return shader_source;
+		return defines + source;
 	}
 
 	ShaderType Shader::GetShaderType() const
@@ -29,27 +25,58 @@ namespace Eng {
 		return shader_type;
 	}
 
-	ShaderType GetShaderTypeFromFileName(const std::string& filename) {
-		auto firstChar = filename[0];
-		switch (firstChar)
+	void Shader::ConfigureEffects(unsigned int effects)
+	{
+		_effects = effects;
+		defines = "#version 450 core\n";
+		if (effects & ShaderEffects::TEXTURES){
+			defines += "#define USE_DIFFUSE_TEXTURE\n";
+		}
+		if (effects & ShaderEffects::NORMAL_MAP){
+			defines += "#define USE_NORMAL_MAP\n";
+		}
+		if (effects & ShaderEffects::SPECULAR_MAP){
+			defines += "#define USE_SPECULAR_MAP\n";
+		}
+		if (effects & ShaderEffects::AMBIENT_LIGHT){
+			defines += "#define USE_AMBIENT_LIGHT\n";
+		}
+	}
+
+	const std::string& Shader::GetShaderDefines() const
+	{
+		return defines;
+	}
+
+	const std::string& Shader::GetShaderSourceCode() const
+	{
+		return source;
+	}
+
+	unsigned int Shader::GetShaderEffects() const
+	{
+		return _effects;
+	}
+
+	ShaderType GetShaderTypeFromFileName(const std::string& file_path) {
+        auto firstCharIndex = file_path.find_last_of('/') + 1;
+        if (firstCharIndex >= file_path.size())
+            goto error_label;
+		switch (file_path[firstCharIndex])
 		{
 		case 'f':
 			return ShaderType::FRAGMENT;
-			break;
 		case 'v':
 			return ShaderType::VERTEX;
-			break;
 		case 't':
 			return ShaderType::TESSELATION;
-			break;
 		case 'g':
 			return ShaderType::GEOMETRY;
-			break;
 		default:
+            error_label:
 			std::stringstream error_msg;
-			error_msg << "COULD NOT DETERMINE SHADER TYPE FROM FILENAME: " << filename;
+			error_msg << "COULD NOT DETERMINE SHADER TYPE FROM FILENAME: " << file_path;
 			throw std::runtime_error(error_msg.str());
-			break;
 		}
 	}
 }

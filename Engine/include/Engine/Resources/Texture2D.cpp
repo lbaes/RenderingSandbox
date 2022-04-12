@@ -1,66 +1,57 @@
 #include "Texture2D.h"
-#include <Engine/Resources/ImageLoader.h>
-#include <Engine/Core/Logger.h>
-#include <cstdlib>
+#include "Loaders/Texture2DLoader.h"
 
 namespace Eng {
 
-	Texture2D::Texture2D() : usage{ Texture2DUsage::DIFFUSE } {}
-
-	Texture2D::Texture2D(const Texture2D& other) : usage{ other.usage }
+	Texture2D::Texture2D(Texture2D&& other) noexcept :
+	_width{other._width}, _height{other._height}, _nr_channels{other._nr_channels}, _data(other._data), _file_path(std::move(other._file_path))
 	{
-		const size_t img_data_size = 4ll * other.img.height * other.img.width;
-		img = other.img;
-		img.data = (unsigned char*)new unsigned char[img_data_size]();
-		if (other.img.data != nullptr) {
-			memcpy(img.data, other.img.data, img_data_size);
+		other._data = nullptr;
+	}
+
+	Texture2D::Texture2D(const Texture2D& other) :
+	_width{other._width}, _height{other._height}, _nr_channels{other._nr_channels}, _file_path(other._file_path)
+	{
+		const size_t size = other._width * other._height * other._nr_channels * sizeof(unsigned char*);
+		_data = new unsigned char[size];
+		for (size_t i = 0; i < size; ++i)
+		{
+			_data[i] = other._data[i];
 		}
 	}
 
-	Texture2D::Texture2D(Texture2D&& other) noexcept : usage{ other.usage }
+    Texture2D::~Texture2D() {
+        Texture2DLoader::Unload(*this);
+        _data = nullptr;
+    }
+
+	void Texture2D::LoadFromFile(const std::string& filePath)
 	{
-		img = other.img;
-		other.img.data = nullptr;
+		Texture2DLoader::Load(filePath, *this);
 	}
 
 	int Texture2D::GetWidth() const
 	{
-		return img.width;
+		return _width;
 	}
 
 	int Texture2D::GetHeight() const
 	{
-		return img.height;
+		return _height;
+	}
+
+	int Texture2D::GetNumberOfChannels() const
+	{
+		return _nr_channels;
+	}
+
+	const std::string& Texture2D::GetPath() const
+	{
+		return _file_path;
 	}
 
 	unsigned char* Texture2D::GetData() const
 	{
-		return img.data;
-	}
-
-	/// <summary>
-	/// Creates a Texture2D object.
-	/// </summary>
-	/// <param name="path">Image file that will be loaded as texture</param>
-	/// <returns>Returns a pointer to a heap allocated Texture2D*. Caller is responsible for freeing it.</returns>
-	Texture2D* Texture2D::LoadFromDisk(const std::string& path)
-	{
-		Texture2D* t = nullptr;
-		try {
-			t = new Texture2D();
-			t->img = ImageLoader::Load(path, ImageLoader::Components::RGBA);
-			t->file_path = path;
-			return t;
-		}
-		catch (const std::exception& e) {
-			delete t;
-			throw;
-		}
-	}
-
-	Texture2D::~Texture2D()
-	{
-		ImageLoader::Unload(img);
-		img.data = nullptr;
+		return _data;
 	}
 }

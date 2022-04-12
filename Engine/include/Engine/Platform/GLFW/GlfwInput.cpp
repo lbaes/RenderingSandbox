@@ -17,50 +17,50 @@ namespace Eng {
 
 	void GlfwInput::Update()
 	{
-		// Triggers all registered callbacks;
+		// triggers all registered callbacks;
 		glfwPollEvents();
 	}
 
-	void GlfwInput::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	void GlfwInput::cursor_position_callback(GLFWwindow*, double xpos, double ypos)
 	{
 		input_ptr->UpdateMousePosition(xpos, ypos);
 	}
 
-	void GlfwInput::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+	void GlfwInput::mouse_button_callback(GLFWwindow*, int button, int action, [[maybe_unused]] int mods)
 	{
 		auto btn = MouseButtonCodeToMouseButton(button);
 		auto kState = CodeToKeyState(action);
 		input_ptr->UpdateMouseButtonState(btn, kState);
 	}
 
-	void GlfwInput::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+	void GlfwInput::scroll_callback(GLFWwindow*, double xoffset, double yoffset)
 	{
 		input_ptr->UpdateMouseScroll(xoffset, yoffset);
 	}
 
-	void GlfwInput::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	void GlfwInput::key_callback(GLFWwindow*, int key, [[maybe_unused]]int scancode, int action, [[maybe_unused]]int mods)
 	{
 		auto key_ = KeyCodeToKey(key);
 		auto keyState = CodeToKeyState(action);
 		input_ptr->UpdateKeyState(key_, keyState);
 	}
 
-	inline constexpr KeyState GlfwInput::CodeToKeyState(int state)
+	constexpr KeyState GlfwInput::CodeToKeyState(int state)
 	{
 		return static_cast<KeyState>(state);
 	}
 
-	inline constexpr Modifiers GlfwInput::CodeToModifiers(int modifiers)
+	constexpr Modifiers GlfwInput::CodeToModifiers(int modifiers)
 	{
 		return static_cast<Modifiers>(modifiers);
 	}
 
-	inline constexpr MouseButton GlfwInput::MouseButtonCodeToMouseButton(int mouseButton)
+	constexpr MouseButton GlfwInput::MouseButtonCodeToMouseButton(int mouseButton)
 	{
 		return static_cast<MouseButton>(mouseButton);
 	}
 
-	inline constexpr Keys GlfwInput::KeyCodeToKey(int key)
+	constexpr Keys GlfwInput::KeyCodeToKey(int key)
 	{
 		return static_cast<Keys>(key);
 	}

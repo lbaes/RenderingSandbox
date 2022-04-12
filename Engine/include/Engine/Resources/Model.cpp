@@ -1,21 +1,25 @@
 #include "Engine/Resources/Model.h"
+#include "Engine/Resources/Loaders/ModelLoader.h"
+
+#include <utility>
 
 namespace Eng {
-	
-	Model::Model(const std::vector<Mesh>& m) : meshes{ m } {
 
-	}
-	
-	void Model::AddMesh(const Mesh& mesh) {
-		meshes.push_back(mesh);
-	}
+    void Model::LoadFromFile(const std::string &filepath) {
+        ModelLoader loader;
+        loader.LoadModel(filepath, *this);
+    }
 
-	const std::vector<Mesh> Model::GetMeshes() const
-	{
-		return meshes;
-	}
+    void Model::LoadFromMeshes(std::vector<Mesh> meshes_) {
+        file_path = "";
+        this->meshes = std::move(meshes_);
+    }
 
-	Model Model::LoadFromDisk(const std::string& path) {
-		return Model{};
-	}
+    const std::vector<Mesh> &Model::GetMeshes() const {
+        return meshes;
+    }
+
+    void Model::AddMesh(const Mesh& mesh) {
+        meshes.push_back(mesh);
+    }
 }

@@ -20,7 +20,10 @@ namespace Eng
 		int GetWidth() const override;
 		int GetHeight() const override;
 
-		virtual void SetTitle(const std::string& title) const override;
+        int GetPixelWidth() const override;
+        int GetPixelHeight() const override;
+
+        virtual void SetTitle(const std::string& title) const override;
 
 		GLFWwindow* GetHandle() const;
 	private:
@@ -31,6 +34,8 @@ namespace Eng
 		void SetupCallbacks();
 
 		static void CloseCallback(GLFWwindow* windowHandle);
+        static void WindowResizeCallback(GLFWwindow* windowHandle, int width, int height);
+        static void FrameBufferResizeCallback(GLFWwindow* windowHandle, int width, int height);
 
 
 	};

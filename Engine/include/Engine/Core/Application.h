@@ -7,18 +7,17 @@
 #include "Engine/Events/Events.h"
 #include "Engine/Core/Input.h"
 #include "Engine/Core/Logger.h"
+#include "Engine/Core/Types/Color.h"
 #include "Engine/LLRenderer/RenderDevice.h"
-#include "Engine/LLRenderer/Buffers.h"
+#include "Engine/LLRenderer/Renderer.h"
+#include "Engine/LLRenderer/PointLight.h"
 
 namespace Eng
 {
-	class EG_API Application;
 
-	EG_API Application* GetApplication();
 	Window* GetWindow();
 	Input* GetInput();
-
-	class EG_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -26,19 +25,18 @@ namespace Eng
 		int Start();
 
 	protected:
-		static Application* app;
 		virtual void OnStart(){};
 		virtual void OnUpdate(){};
-
-	private:
-		friend EG_API Application* GetApplication();
-		friend Window* GetWindow();
-		friend Input* GetInput();
+		virtual void Draw(){};
 
 		Window* window;
 		Input* input;
-		Logger* logger;
 		std::unique_ptr<RenderDevice> renderDevice;
+		std::unique_ptr<Renderer> renderer;
+	private:
+		friend Window* GetWindow();
+		friend Input* GetInput();
+		Logger* logger;
 		bool isRunning;
 	};
 }

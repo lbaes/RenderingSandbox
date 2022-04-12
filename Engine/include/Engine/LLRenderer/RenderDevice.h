@@ -1,24 +1,43 @@
 #pragma once
-#include "Handles.h"
+#if defined(ENG_WINDOWS) || defined(ENG_LINUX)
+    #include "OpenGL/GLTexture.h"
+    #include "OpenGL/GLShader.h"
+    #include "OpenGL/GLMesh.h"
+    #include "OpenGL/GLModel.h"
+    #include "OpenGL/GLLine.h"
+	#include "OpenGL/GLFramebuffer.h"
+	#include "OpenGL/GLQuad.h"
+using GPUTextureHandle = Eng::ogl::GLTexture;
+    using GPUShader = Eng::ogl::GLShader;
+    using GPUMeshHandle = Eng::ogl::GLMesh;
+    using GPUModelHandle = Eng::ogl::GLModel;
+    using GPULineHandle = Eng::ogl::GLLine;
+	using GPURenderTarget = Eng::ogl::GLFramebuffer;
+	using GPURenderTargetAttachments = Eng::ogl::GLFrameBufferAttachments;
+	using GPURenderTargetOptions = Eng::ogl::GLFrameBufferOptions;
+#endif
+#include <unordered_map>
+#include <string>
+#include "Engine/Core/Logger.h"
+#include "Engine/Core/Types/Line.h"
 
 namespace Eng {
-
-	class VertexBuffer;
-	class IndexBuffer;
 	class Texture2D;
 	class Shader;
 	class Mesh;
 	class Model;
 	class RenderDevice {
 	public:
-	public:
 		void InitRenderDevice();
-		BufferGPUHandle CreateBuffers(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const;
-		Texture2DGPUHandle CreateTexture2D(const Texture2D& tex) const;
-		ShaderGPUHandle CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader) const;
-		MeshGPUHandle CreateMesh(const Mesh& mesh) const;
-		ModelGPUHandle CreateModel(const Model& model) const;
+		GPUTextureHandle CreateTexture2D(const Texture2D& tex, Texture2DUsage usage = Texture2DUsage::DIFFUSE);
+		GPUShader CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
+		GPUMeshHandle CreateMesh(const Mesh& mesh);
+		GPUModelHandle CreateModel(const Model& model);
+		GPURenderTarget CreateRenderTarget(int width, int height, GPURenderTargetAttachments attachments = GPURenderTargetAttachments::COLOR, GPURenderTargetOptions options = static_cast<GPURenderTargetOptions>(0u));
+		GPULineHandle CreateLine(const Line& line);
 	private:
 		bool initialized = false;
+        std::unordered_map<std::string, GPUTextureHandle> loaded_textures;
+        Logger* logger = nullptr;
 	};
 }

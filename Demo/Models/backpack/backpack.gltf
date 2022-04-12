@@ -1,0 +1,167 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Plane.009",
+            "rotation" : [
+                0.6741454005241394,
+                0,
+                0,
+                0.738598644733429
+            ],
+            "translation" : [
+                0.06098363548517227,
+                0.8202947378158569,
+                0.07595301419496536
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Material.001",
+            "normalTexture" : {
+                "index" : 0
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 1
+                },
+                "metallicRoughnessTexture" : {
+                    "index" : 2
+                },
+                "roughnessFactor" : 0.5
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Plane.009",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
+        },
+        {
+            "sampler" : 0,
+            "source" : 2
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "1001_normal",
+            "uri" : "1001_normal.jpg"
+        },
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "1001_albedo",
+            "uri" : "1001_albedo.jpg"
+        },
+        {
+            "mimeType" : "image/jpeg",
+            "name" : "1001_metallic",
+            "uri" : "1001_metallic.jpg"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 47488,
+            "max" : [
+                1.9709751605987549,
+                1.5344820022583008,
+                2.154268264770508
+            ],
+            "min" : [
+                -2.187110185623169,
+                -2.326910972595215,
+                -2.9951722621917725
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 47488,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 47488,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 203724,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 569856,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 569856,
+            "byteOffset" : 569856
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 379904,
+            "byteOffset" : 1139712
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 407448,
+            "byteOffset" : 1519616
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1927064,
+            "uri" : "backpack.bin"
+        }
+    ]
+}

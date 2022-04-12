@@ -11,14 +11,27 @@ namespace Eng {
 		INVALID,
 	};
 
+	enum ShaderEffects {
+		TEXTURES 		= 1u << 0,
+		SPECULAR_MAP 	= 1u << 1,
+		NORMAL_MAP		= 1u << 2,
+		AMBIENT_LIGHT	= 1u << 3
+	};
+
 	class Shader {
 	public:
-		static Shader LoadFromDisk(const std::string& path);
-		const std::string& GetShaderSource() const;
+		Shader() = default;
+		void ConfigureEffects(unsigned int effects);
+		void LoadFromDisk(const std::string& path);
+		std::string GetShaderSourceCodeComplete() const;
+		const std::string& GetShaderSourceCode() const;
+		const std::string& GetShaderDefines() const;
+		unsigned int GetShaderEffects() const;
 		ShaderType GetShaderType() const;
 	private:
-		Shader() = default;
-		std::string shader_source = "";
+		std::string source;
+		std::string defines = "#version 450 core\n";
 		ShaderType shader_type = ShaderType::INVALID;
+		unsigned int _effects = 0;
 	};
 }
