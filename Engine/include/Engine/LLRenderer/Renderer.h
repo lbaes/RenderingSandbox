@@ -12,7 +12,8 @@ namespace Eng
 	class Renderer
 	{
 	public:
-		virtual void RenderModel(const GPUModelHandle& model, Transform t) = 0;
+        virtual void RenderTexture2D(const GPUTextureHandle& handle, GPUQuad quad) = 0;
+        virtual void RenderModel(const GPUModelHandle& model, Transform t) = 0;
         virtual void RenderDebugLine(const GPULineHandle& line, Color4 color) = 0;
 		virtual void SetShader(GPUShader& shader) = 0;
 		virtual void SetCamera(const Camera& camera) = 0;

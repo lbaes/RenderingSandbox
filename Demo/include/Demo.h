@@ -7,6 +7,8 @@
 #include "Engine/LLRenderer/ArcBallCamera.h"
 #include "Engine/LLRenderer/FreeCamera.hpp"
 #include "Engine/LLRenderer/PointLight.h"
+#include "Engine/Resources/Loaders/Texture2DLoader.h"
+#include "Engine/Resources/Texture2D.h"
 
 using namespace Eng;
 
@@ -16,6 +18,7 @@ public:
 	GPUShader model_shader_handle, line_shader_handle, simple_model_shader_handle, *current_shader;
 	GPUModelHandle sponza_handle, container_handle, backpack_handle;
     GPULineHandle lineX_handle, lineY_handle, lineZ_handle;
+    GPUTextureHandle hud;
 
 	// Timers
 	Timer simulation_timer;
@@ -78,6 +81,11 @@ public:
 		fShaderModel.ConfigureEffects(effects_simple);
         simple_model_shader_handle = renderDevice->CreateShaderProgram(vShaderModel, fShaderModel);
         line_shader_handle = renderDevice->CreateShaderProgram(vShaderLine, fShaderLine);
+
+        // Texture
+        Texture2D bricks;
+        Texture2DLoader::Load("resources/monkey/bricks.jpeg", bricks);
+        hud = renderDevice->CreateTexture2D(bricks);
 
         // Load model
 		Model sponzaModel, boxModel, backpackModel;
@@ -238,6 +246,8 @@ public:
 
 		renderer->SetShader(simple_model_shader_handle);
 		renderer->RenderModel(container_handle, t2);
+
+        renderer->RenderTexture2D(hud, GPUQuad(0.0f, 0.0f, 200, 200));
 
 
 		// draw line

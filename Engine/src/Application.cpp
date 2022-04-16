@@ -26,7 +26,8 @@ namespace Eng {
         window->CreateWindow("Application", 1280, 720);
         input = GetInput();
         renderDevice = std::make_unique<RenderDevice>();
-        renderer = std::make_unique<GLRenderer>();
+        renderDevice->InitRenderDevice();
+        renderer = std::make_unique<GLRenderer>(renderDevice.get(), 1280, 720);
         logger = Logger::GetLogger();
     }
 

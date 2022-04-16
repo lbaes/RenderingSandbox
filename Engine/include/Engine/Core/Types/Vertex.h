@@ -8,4 +8,9 @@ namespace Eng {
         Vec2 texture_coordinate{};
 		Vec3 tangent{};
 	};
+
+    struct Vertex2D {
+        Vec2 position;
+        Vec2 texture_coordinate;
+    };
 }
