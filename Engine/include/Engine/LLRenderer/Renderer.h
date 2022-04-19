@@ -1,7 +1,6 @@
 #pragma once
 #include "RenderDevice.h"
 #include "Engine/Core/Types/Transform.h"
-#include "Engine/Core/Types/Transform.h"
 #include "Engine/Core/Types/Color.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
@@ -13,8 +12,11 @@ namespace Eng
 	{
 	public:
         virtual void RenderTexture2D(const GPUTextureHandle& handle, GPUQuad quad) = 0;
+        virtual void RenderTexture2D(const GPURenderTarget& handle, GPUQuad quad) = 0;
         virtual void RenderModel(const GPUModelHandle& model, Transform t) = 0;
         virtual void RenderDebugLine(const GPULineHandle& line, Color4 color) = 0;
+        virtual void SetRenderTarget() = 0;
+        virtual void SetRenderTarget(GPURenderTarget& target) = 0;
 		virtual void SetShader(GPUShader& shader) = 0;
 		virtual void SetCamera(const Camera& camera) = 0;
 		virtual void SetClearColor(Color4 color) = 0;

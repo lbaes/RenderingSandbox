@@ -11,6 +11,7 @@ namespace Eng {
 			{
 			case GL_DEBUG_SEVERITY_HIGH:
 				logger->LogError("GL DEBUG: {}", std::string(message));
+                throw std::runtime_error("ogl::error");
 				break;
             case GL_DEBUG_SEVERITY_MEDIUM:
 			case GL_DEBUG_SEVERITY_LOW:

@@ -8,13 +8,10 @@ Eng::GLRenderer::GLRenderer(Eng::RenderDevice *renderDevice, int width, int heig
           _directionalLight{} {
     _staticPointLights.reserve(max_lights);
     _dynamicPointLights.reserve(max_lights);
-    ogl::GLFramebuffer screenFrameBuffer = renderDevice->CreateRenderTarget(screenWidth, screenHeight);
-    Eng::Shader screenVertex;
-    Eng::Shader screenFragment;
+    Eng::Shader screenVertex, screenFragment;
     screenVertex.LoadFromDisk("resources/vScreen.glsl");
     screenFragment.LoadFromDisk("resources/fScreen.glsl");
     _screenShader = renderDevice->CreateShaderProgram(screenVertex, screenFragment);
-
 }
 
 void Eng::GLRenderer::RenderModel(const GPUModelHandle &model, Eng::Transform t) {
@@ -119,7 +116,7 @@ void Eng::GLRenderer::UpdateShaderPointLightUniforms(bool dynamic, bool use_shad
     }
 
     // Set contribution of remaining lights to zero;
-    const int lights_in_use = _staticPointLights.size() + _dynamicPointLights.size();
+    const int lights_in_use = static_cast<int>(_staticPointLights.size() + _dynamicPointLights.size());
     for (int i = lights_in_use; i < max_lights; ++i) {
         _shader->uniform_set_structArray_member("light", i, "ambient", Vec3{0.0f});
         _shader->uniform_set_structArray_member("light", i, "diffuse", Vec3{0.0f});
@@ -156,12 +153,11 @@ void Eng::GLRenderer::RenderTexture2D(const GPUTextureHandle& handle, GPUQuad qu
     Mat4 model = Mat4(1.0f);
     model = glm::translate(model, Vec3{quad.x, quad.y, 0.0f});
     model = glm::scale(model, Vec3(quad.w, quad.h, 0.0f));
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
     _screenShader.use();
     _screenShader.uniform_set("model", model);
     _screenShader.uniform_set("projection", ortho);
     _screenShader.uniform_set("screenTexture", int(0));
+    glDisable(GL_DEPTH_TEST);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, handle.id);
     glBindVertexArray(render_device->GetQuadVAO());
@@ -170,3 +166,19 @@ void Eng::GLRenderer::RenderTexture2D(const GPUTextureHandle& handle, GPUQuad qu
     glEnable(GL_DEPTH_TEST);
 }
 
+void Eng::GLRenderer::SetRenderTarget(GPURenderTarget& target) {
+    glBindFramebuffer(GL_FRAMEBUFFER, target.ID);
+    glViewport(0, 0, target.width, target.height);
+}
+
+void Eng::GLRenderer::SetRenderTarget() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, screenWidth, screenHeight);
+}
+
+void Eng::GLRenderer::RenderTexture2D(const GPURenderTarget &handle, GPUQuad quad) {
+    GPUTextureHandle th;
+    th.id = handle.COLOR_ID;
+    th.usage = Texture2DUsage::DIFFUSE;
+    RenderTexture2D(th, quad);
+}

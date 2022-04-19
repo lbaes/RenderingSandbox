@@ -11,6 +11,7 @@ namespace Eng {
     public:
 		GLRenderer(RenderDevice* renderDevice, int width, int height);
 		void RenderTexture2D(const GPUTextureHandle& handle, GPUQuad quad) override;
+		void RenderTexture2D(const GPURenderTarget& handle, GPUQuad quad) override;
         void RenderModel(const GPUModelHandle& model, Transform t) override;
         void RenderDebugLine(const GPULineHandle& line, Color4 color) override;
         void RenderMesh(const GPUMeshHandle& mesh);
@@ -20,6 +21,8 @@ namespace Eng {
 		void SetStaticPointLights(const std::vector<PointLight>& lights) override;
 		void AddStaticPointLight(PointLight light) override;
 		void SetDirectionalLight(DirectionalLight light) override;
+        void SetRenderTarget() override;
+        void SetRenderTarget(GPURenderTarget& target) override;
 		void Clear() override;
 	private:
 		RenderDevice* render_device;
@@ -31,7 +34,6 @@ namespace Eng {
 		std::vector<PointLight> _staticPointLights;
 		DirectionalLight _directionalLight{};
 		int screenWidth, screenHeight;
-        GLuint quad_vao;
 		const int max_lights = 10;
 		void UpdateShaderPointLightUniforms(bool dynamic = true, bool use_shader = true);
 		void UpdateShaderDirectionalLightUniforms(bool use_shader = true);

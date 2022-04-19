@@ -34,9 +34,9 @@ namespace Eng {
 		GPUShader CreateShaderProgram(const Shader& vertexShader, const Shader& fragmentShader);
 		GPUMeshHandle CreateMesh(const Mesh& mesh);
 		GPUModelHandle CreateModel(const Model& model);
-		GPURenderTarget CreateRenderTarget(int width, int height, GPURenderTargetAttachments attachments = GPURenderTargetAttachments::COLOR, GPURenderTargetOptions options = static_cast<GPURenderTargetOptions>(0u));
+		GPURenderTarget CreateRenderTarget(int width, int height, unsigned int attachments = GPURenderTargetAttachments::COLOR, GPURenderTargetOptions options = static_cast<GPURenderTargetOptions>(0u));
 		GPULineHandle CreateLine(const Line& line);
-        unsigned int GetQuadVAO() const;
+        GLuint GetQuadVAO() const;
 	private:
 		bool initialized = false;
         std::unordered_map<std::string, GPUTextureHandle> loaded_textures;

@@ -169,7 +169,7 @@ namespace Eng {
 
         // vertex positions
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) nullptr);
 
         // vertex normals
         glEnableVertexAttribArray(1);
@@ -188,8 +188,6 @@ namespace Eng {
 
         GPUMeshHandle m;
         m.VAO = bh.VAO;
-        m.VBO = bh.VBO;
-        m.EBO = bh.EBO;
         m.index_count = static_cast<GLsizei>(mesh.indices.size());
 
         // Loads textures into GPU
@@ -244,7 +242,8 @@ namespace Eng {
         return lineHandle;
     }
 
-    GPURenderTarget RenderDevice::CreateRenderTarget(int width, int height, GPURenderTargetAttachments attachments,
+    GPURenderTarget RenderDevice::CreateRenderTarget(int width, int height,
+                                                     unsigned int attachments,
                                                      GPURenderTargetOptions options) {
         GPURenderTarget renderTarget;
         renderTarget.width = width;
@@ -271,25 +270,15 @@ namespace Eng {
             unsigned int depth;
             glGenTextures(1, &depth);
             glBindTexture(GL_TEXTURE_2D, depth);
-            glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH, width, height);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, width, height);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth, 0);
             renderTarget.DEPTH_ID = depth;
         }
 
-        if (attachments & GPURenderTargetAttachments::STENCIL) {
-            unsigned int stencil;
-            glGenTextures(1, &stencil);
-            glBindTexture(GL_TEXTURE_2D, stencil);
-            glTexStorage2D(GL_TEXTURE_2D, 1, GL_STENCIL, width, height);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencil, 0);
-            renderTarget.STENCIL_ID = stencil;
-        }
-
-        assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+        auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        assert(status == GL_FRAMEBUFFER_COMPLETE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         renderTarget.ID = FBO;
@@ -299,20 +288,20 @@ namespace Eng {
     }
 
     unsigned int RenderDevice::GetQuadVAO() const {
-
         return quad_vao;
     }
 
     void RenderDevice::CreatePrimitiveVAOs() {
         const static float vertices[] = {
-                1.0f, 1.0f, 1.0f, 1.0f,           // top right
-                1.0f, -1.0f, 1.0f, 0.0f,          // bottom right
-                -1.0f, -1.0f, 0.0f, 0.0f,     // bottom left
-                -1.0f, 1.0f, 0.0f, 1.0f       // top left
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, -1.0f, 1.0f, 0.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f, 1.0f
         };
+
         const static unsigned int indices[] = {
-                0, 1, 3, // first triangle
-                1, 2, 3  // second triangle
+                0, 1, 3,
+                1, 2, 3
         };
 
         GLuint VAO, VBO, EBO;
@@ -371,7 +360,7 @@ namespace Eng {
 
         glGetProgramiv(shader, GL_LINK_STATUS, &linkSuccess);
         if (!linkSuccess) {
-            glGetProgramInfoLog(shader, 512, NULL, infoLog);
+            glGetProgramInfoLog(shader, 512, nullptr, infoLog);
             std::stringstream s;
             s << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
             throw std::runtime_error(s.str());
